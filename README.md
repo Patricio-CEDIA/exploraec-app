@@ -49,7 +49,7 @@ Algunos cambios (permisos nativos de la Sesión 4, configuración de Firebase de
 | Rama | Punto de partida para | Qué agrega/completa esa sesión |
 |---|---|---|
 | `sesion-02` | Sesión 2 — Widgets básicos y avanzados | Modelo `Place`, lista de lugares en memoria (`ListView`/`GridView`, `PlaceCard`), pantalla de detalle, formulario "Agregar lugar", navegación inferior |
-| `sesion-03` | Sesión 3 — Interfaces y UX | Tema Material, estados de carga/vacío/error reutilizables, layout responsivo |
+| `sesion-03` | Sesión 3 — Interfaces y UX Avanzada | Tema Material, estados de carga/vacío/error reutilizables, layout responsivo |
 | `sesion-04` | Sesión 4 — Mapas y geolocalización | Permisos de ubicación, posición actual, pantalla de Mapa con `flutter_map` |
 | `sesion-05` | Sesión 5 — Programación asíncrona | Lugares reales desde la Overpass API, estados loading/success/error |
 | `sesion-06` | Sesión 6 — Gestión de estado con GetX | `PlacesController`, `Obx`, navegación e inyección de dependencias con GetX |
