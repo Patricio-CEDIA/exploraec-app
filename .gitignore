@@ -12,4 +12,5 @@ ios/Flutter/Generated.xcconfig
 # Firebase / secretos — nunca se suben
 google-services.json
 GoogleService-Info.plist
+lib/firebase_options.dart
 .env

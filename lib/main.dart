@@ -1,21 +1,29 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 import 'bindings/places_binding.dart';
+import 'firebase_options.dart';
 import 'screens/favorites_screen.dart';
 import 'screens/home_screen.dart';
 import 'screens/map_screen.dart';
 import 'theme/app_theme.dart';
 
 Future<void> main() async {
-  // Hive necesita el motor de Flutter listo antes de pedirle al sistema
-  // operativo la carpeta donde guardar sus archivos — por eso `main` ahora
-  // es `async` y arranca con `ensureInitialized()` antes que nada más.
+  // Hive y Firebase necesitan el motor de Flutter listo antes de pedirle
+  // algo al sistema operativo — por eso `main` es `async` y arranca con
+  // `ensureInitialized()` antes que nada más.
   WidgetsFlutterBinding.ensureInitialized();
   await Hive.initFlutter();
   await Hive.openBox<Map>('lugares_cache');
   await Hive.openBox<Map>('favoritos');
+  // `firebase_options.dart` NO viene en este repo (mira `.gitignore`): lo
+  // genera `flutterfire configure` con los datos de TU propio proyecto de
+  // Firebase — Paso 2 de la práctica de la Sesión 8. Sin ese paso, este
+  // archivo no existe y el proyecto no compila; es exactamente lo que se
+  // espera hasta completarlo, no un error de este código.
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(const ExploraEcApp());
 }
 

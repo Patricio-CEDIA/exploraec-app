@@ -1,0 +1,28 @@
+// Reglas de seguridad de Firestore — Sesión 8.
+//
+// No es un secreto (a diferencia de una API key de LLM, ver Sesión 9): estas
+// reglas SON la seguridad, se pegan tal cual en la consola de Firebase
+// (Firestore Database → Reglas) o se despliegan con
+// `firebase deploy --only firestore:rules` si usas la Firebase CLI a nivel
+// de proyecto (fuera del alcance de este curso; la consola alcanza).
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Colección `reviews`: cualquiera (con o sin sesión) puede LEER, para
+    // que un visitante sin cuenta también vea qué opinan los demás. Solo
+    // un usuario autenticado puede CREAR una reseña, y únicamente a su
+    // propio nombre (`request.resource.data.userId` debe ser su propio uid
+    // — sin esto, cualquier usuario logueado podría publicar una reseña
+    // haciéndose pasar por otro). Solo el dueño puede BORRAR la suya.
+    match /reviews/{reviewId} {
+      allow read: if true;
+      allow create: if request.auth != null
+                    && request.auth.uid == request.resource.data.userId;
+      allow update: if false; // este curso no edita reseñas, solo crea/borra
+      allow delete: if request.auth != null
+                    && request.auth.uid == resource.data.userId;
+    }
+  }
+}

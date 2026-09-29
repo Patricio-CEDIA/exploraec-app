@@ -2,10 +2,10 @@ import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 
+import 'auth_controller.dart';
 import '../models/place.dart';
 import '../repositories/place_repository.dart';
 import '../services/location_service.dart';
-import '../services/places_api_service.dart';
 
 enum EstadoCarga { cargando, exito, error }
 
@@ -65,28 +65,14 @@ class PlacesController extends GetxController {
       final pos = await LocationService.obtenerPosicionActual();
       posicion.value = pos;
 
-      // TODO(sesion-07): borra el bloque de abajo y descomenta el bloque completo. (Paso 4 — repositorio con caché)
-      // Por qué: el bloque de abajo llama a PlacesApiService directo,
-      // igual que en la Sesión 6 — si no hay red, cargarLugares() falla
-      // sin más. El bloque real pasa por _repository.obtenerLugaresCercanos,
-      // que primero intenta la red y, si falla, devuelve la última copia
-      // guardada en Hive (marcando desdeCache = true) en vez de fallar.
-      final reales = await PlacesApiService.buscarLugaresCercanos(
+      final (resultado, cache) = await _repository.obtenerLugaresCercanos(
         pos,
         forzarError: _modoDebugError,
         forzarVacio: _modoDebugVacio,
       );
-      lugares.value = [...reales, ...lugaresEjemplo];
-      desdeCache.value = false;
+      lugares.value = [...resultado, ...lugaresEjemplo];
+      desdeCache.value = cache;
       estado.value = EstadoCarga.exito;
-      // final (resultado, cache) = await _repository.obtenerLugaresCercanos(
-      //   pos,
-      //   forzarError: _modoDebugError,
-      //   forzarVacio: _modoDebugVacio,
-      // );
-      // lugares.value = [...resultado, ...lugaresEjemplo];
-      // desdeCache.value = cache;
-      // estado.value = EstadoCarga.exito;
     } catch (e) {
       mensajeError.value = '$e';
       estado.value = EstadoCarga.error;
@@ -104,21 +90,24 @@ class PlacesController extends GetxController {
 
   bool esFavorito(Place lugar) => favoritos.any((p) => p.id == lugar.id);
 
-  // TODO(sesion-07): borra la línea de abajo y descomenta el bloque completo. (Paso 5 — favoritos persistentes)
-  // Por qué: el método vacío de abajo no guarda ni quita nada — la
-  // versión real agrega o elimina el lugar de _favoritosBox (Hive, lo
-  // que sobrevive reiniciar la app) y de la lista reactiva favoritos
-  // (lo que Obx observa para actualizar el ícono al instante).
-  void alternarFavorito(Place lugar) {}
-  // void alternarFavorito(Place lugar) {
-  //   if (esFavorito(lugar)) {
-  //     _favoritosBox.delete(lugar.id);
-  //     favoritos.removeWhere((p) => p.id == lugar.id);
-  //   } else {
-  //     _favoritosBox.put(lugar.id, lugar.toMap());
-  //     favoritos.add(lugar);
-  //   }
-  // }
+  // TODO(sesion-08): borra la línea de abajo y descomenta el bloque completo. (Paso 5 — favoritos exigen sesión iniciada)
+  // Por qué: hasta este paso, cualquiera puede marcar favoritos sin
+  // haber iniciado sesión — el bloque comentado corta la operación
+  // antes de tocar Hive si no hay un usuario autenticado, para que
+  // los favoritos queden asociados a una cuenta real, no anónimos.
+  void alternarFavorito(Place lugar) {
+    // if (!Get.find<AuthController>().estaAutenticado) {
+    //   Get.snackbar('Inicia sesión', 'Necesitas una cuenta para guardar favoritos.');
+    //   return;
+    // }
+    if (esFavorito(lugar)) {
+      _favoritosBox.delete(lugar.id);
+      favoritos.removeWhere((p) => p.id == lugar.id);
+    } else {
+      _favoritosBox.put(lugar.id, lugar.toMap());
+      favoritos.add(lugar);
+    }
+  }
 
   double? distanciaA(Place lugar) {
     final pos = posicion.value;

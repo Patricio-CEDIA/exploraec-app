@@ -1,35 +1,46 @@
-# Placeholders de esta rama (sesion-07)
+# Placeholders de esta rama (sesion-08)
 
-Punto de partida: ExploraEC con `PlacesController` (GetX) ya compartido entre Inicio y Mapa (Sesión 4), sin ninguna persistencia — cerrar la app pierde todo, y sin conexión no hay nada que mostrar salvo el error. Tráela con:
+Punto de partida: ExploraEC con favoritos y caché persistentes en Hive (Sesión 7), sin cuentas de usuario ni datos colaborativos. Tráela con:
 
 ```bash
 git fetch starter
-git checkout starter/sesion-07 -- lib pubspec.yaml PLACEHOLDERS.md
+git checkout starter/sesion-08 -- lib pubspec.yaml PLACEHOLDERS.md firestore.rules
 ```
 
-El objetivo de esta sesión es agregar una caché local con Hive (`PlaceRepository`) y favoritos que sobreviven reiniciar la app. Cada bloque comentado trae, justo debajo del `TODO`, un comentario `// Por qué:` con la explicación.
+El objetivo de esta sesión es agregar Firebase: autenticación por correo/contraseña, y reseñas de lugares visibles para todos los usuarios (Firestore). Cada bloque comentado trae, justo debajo del `TODO`, un comentario `// Por qué:` con la explicación.
+
+## ⚠️ Este branch NO compila hasta completar el Paso 2
+
+A diferencia de todas las sesiones anteriores, `flutter pub get && flutter run` **no** va a funcionar de entrada. `lib/main.dart` importa `firebase_options.dart`, un archivo que no existe todavía en tu copia — lo genera `flutterfire configure` con los datos de TU propio proyecto de Firebase (Paso 2 de la práctica). Es un archivo específico de cada proyecto de Firebase, así que no puede venir pre-armado en este repo. Ver `lib/firebase_options.example.dart` para entender su forma antes de generarlo.
 
 ## Archivos nuevos ya completos (sin `TODO`)
-- `lib/repositories/place_repository.dart` — completo, no tiene marcadores. Se usa recién al completar el Paso 4 en `places_controller.dart` (ver tabla de abajo) — hasta entonces, el analizador puede marcar el campo `_repository` del controller como "no usado", es esperado.
-- `lib/screens/favorites_screen.dart` — completo, reemplaza a `favorites_placeholder_screen.dart` (se eliminó de esta rama).
-- `lib/main.dart` — ya inicializa Hive (`Hive.initFlutter()`, abre las cajas `lugares_cache` y `favoritos`) antes de `runApp`, y usa `FavoritesScreen` en vez del placeholder.
-- `lib/bindings/places_binding.dart` — ya arma el `PlaceRepository` con la caja `lugares_cache` y se lo pasa al `PlacesController`.
-- `lib/models/place.dart` — ya tiene `toMap()`/`fromMap()` para la (de)serialización manual con Hive.
-- `lib/widgets/place_card.dart` — ya muestra el ícono de favorito (`Obx` + `controller.esFavorito(place)`/`controller.alternarFavorito(place)`); no hace nada visible hasta completar el Paso 5.
-- `pubspec.yaml` — ya incluye `hive`, `hive_flutter`, `path_provider`.
+- `lib/models/review.dart` — completo.
+- `lib/services/reviews_service.dart` — completo, ya usado desde `detail_screen.dart`.
+- `firestore.rules` — completo. Pégalo en la consola de Firebase (Firestore Database → Reglas) en el Paso 5 — no es un archivo que el proyecto lea automáticamente.
+- `lib/firebase_options.example.dart` — plantilla de referencia, no se usa directamente (ver advertencia arriba).
+- `lib/screens/login_screen.dart`, `lib/screens/register_screen.dart` — completos.
+- `lib/screens/favorites_screen.dart` — ya exige sesión iniciada (muestra un botón "Iniciar sesión" si `AuthController.estaAutenticado` es `false`).
+- `lib/screens/detail_screen.dart` — ya tiene la sección de reseñas completa (lectura en tiempo real vía `StreamBuilder`), salvo el botón "Publicar" (ver tabla abajo).
+- `lib/bindings/places_binding.dart` — ya registra `AuthController` junto a `PlacesController`.
+- `pubspec.yaml` — ya incluye `firebase_core`, `firebase_auth`, `cloud_firestore`.
+- `.gitignore` — ya excluye `lib/firebase_options.dart` además de `google-services.json`/`GoogleService-Info.plist`.
 
 ## Qué descomentar
 
 | Archivo | Qué descomentar | Paso de la práctica |
 |---|---|---|
-| `lib/controllers/places_controller.dart` | En `cargarLugares()`: borrar el bloque que llama a `PlacesApiService.buscarLugaresCercanos(...)` directamente y descomentar el bloque que llama a `_repository.obtenerLugaresCercanos(...)` (con caché) | Paso 4 |
-| `lib/controllers/places_controller.dart` | Borrar `void alternarFavorito(Place lugar) {}` y descomentar el cuerpo real de `alternarFavorito` (agrega/quita de `_favoritosBox` y de la lista reactiva `favoritos`) | Paso 5 |
+| `lib/controllers/auth_controller.dart` | `registrar()`: borrar `async => false;` y descomentar el cuerpo real (`createUserWithEmailAndPassword` + manejo de `FirebaseAuthException`) | Paso 3 |
+| `lib/controllers/auth_controller.dart` | `iniciarSesion()`: borrar `async => false;` y descomentar el cuerpo real (`signInWithEmailAndPassword` + manejo de `FirebaseAuthException`) | Paso 3 |
+| `lib/controllers/places_controller.dart` | `alternarFavorito()`: borrar la línea `return;` (bien al inicio, dentro del cuerpo) y descomentar las 3 líneas que verifican `Get.find<AuthController>().estaAutenticado` antes de continuar | Paso 4 |
+| `lib/screens/detail_screen.dart` | `_enviarReseña()`: borrar `return;` y descomentar el bloque real que arma un `Review` y llama a `ReviewsService.agregar(...)` | Paso 5 |
 
-Con la rama recién traída (antes de descomentar nada), la app funciona igual que al final de la Sesión 4 (sin caché, sin favoritos funcionales — el corazón de `PlaceCard` se ve pero no persiste nada todavía). El orden importa: primero el Paso 4 (repositorio), después el Paso 5 (favoritos) — ambos son independientes entre sí, pero seguir ese orden es el que sigue el instructivo.
+Nota del analizador: `places_controller.dart` importa `auth_controller.dart` desde antes de descomentar el Paso 4 — hasta ese momento, el analizador puede marcar ese import como "no usado todavía" dentro del bloque comentado; es esperado, no un error.
 
 ## Comando de arranque
 
 ```bash
+dart pub global activate flutterfire_cli
+flutterfire configure
 flutter pub get
 flutter run
 ```
