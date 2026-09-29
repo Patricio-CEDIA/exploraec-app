@@ -1,45 +1,26 @@
-# Placeholders de esta rama (sesion-05)
+# Placeholders de esta rama (sesion-06)
 
-Punto de partida: ExploraEC con `PlacesController` (GetX) ya resuelto en Inicio (Sesión 4) y la pestaña Mapa todavía como placeholder. Tráela con:
+Punto de partida: ExploraEC con `PlacesController` (Sesión 4) y mapa real con posición del usuario (Sesión 5) ya resueltos; los lugares siguen siendo los de ejemplo escritos a mano. Tráela con:
 
 ```bash
 git fetch starter
-git checkout starter/sesion-05 -- lib pubspec.yaml PLACEHOLDERS.md
+git checkout starter/sesion-06 -- lib pubspec.yaml PLACEHOLDERS.md
 ```
 
-El objetivo de esta sesión es reemplazar la pestaña "Mapa" (que hasta ahora solo mostraba un texto de aviso) por un mapa real con la posición del usuario y marcadores de los lugares que expone el controller. Cada bloque comentado trae, justo debajo del `TODO`, un comentario `// Por qué:` con la explicación.
+El objetivo de esta sesión es reemplazar los lugares de ejemplo por lugares reales obtenidos de la Overpass API de OpenStreetMap (sin API key), usando la posición real del usuario, integrando la consulta en el `PlacesController`. Cada bloque comentado trae, justo debajo del `TODO`, un comentario `// Por qué:` con la explicación.
 
 ## Archivos nuevos ya completos (sin `TODO`)
-- `lib/services/location_service.dart` — salvo el bloque de solicitud de permiso, ver tabla abajo.
-- `lib/controllers/places_controller.dart` — ya extendido con `posicion`, `estadoPosicion`, `mensajeErrorPosicion`, `cargarPosicion()` y `distanciaA()`.
-- `lib/screens/map_screen.dart` — lee el controller con `Obx`; salvo la capa de marcadores, ver tabla abajo.
-- `lib/screens/detail_screen.dart` — ya acepta `distanciaMetros` opcional (se usa desde el Paso 4).
-- `pubspec.yaml` — ya incluye `geolocator`, `permission_handler`, `flutter_map`, `latlong2`.
+- `lib/services/places_api_service.dart` — construcción de la consulta Overpass QL, llamada HTTP, manejo de errores (`SocketException`, timeout, `429`, JSON inválido) y mapeo de la respuesta a `Place`.
+- `lib/models/place.dart` — nuevo `Place.fromOverpassElement(...)`; ya no incluye `fetchLugaresSimulado` (reemplazada por el servicio real de esta sesión).
+- `pubspec.yaml` — ya incluye `http`.
 
 ## Qué descomentar
 
 | Archivo | Qué descomentar | Paso de la práctica |
 |---|---|---|
-| `lib/services/location_service.dart` | El bloque `Geolocator.checkPermission()`/`requestPermission()` dentro de `obtenerPosicionActual()` | Paso 3 |
-| `lib/screens/map_screen.dart` | El `MarkerLayer` completo (tu posición + un marcador por cada lugar del controller, con navegación al Detalle mostrando la distancia) | Paso 4 |
+| `lib/controllers/places_controller.dart` | En `cargarLugares()`: borrar `lugares.value = []; estado.value = EstadoCarga.exito;` y descomentar el bloque `try { ... } catch (e) { ... }` completo (posición del controller → Overpass → se agregan los lugares creados a mano en `AddPlaceScreen`) | Paso 3 |
 
-## Edición manual fuera de este repo (no versionada aquí)
-
-`android/` e `ios/` nunca viven en este repo (ver `README.md`) — los generó `flutter create` una sola vez en la Sesión 1 y no se vuelven a tocar con `git checkout`. Los permisos nativos de esta sesión se agregan **directamente en tu propio proyecto** `exploraec`, a mano:
-
-**Android** — agregar dentro de `android/app/src/main/AndroidManifest.xml`, como hijo directo de `<manifest>` (antes de `<application>`):
-```xml
-<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-```
-
-**iOS** — agregar dentro de `ios/Runner/Info.plist`, como un par `<key>`/`<string>` más dentro del `<dict>` principal:
-```xml
-<key>NSLocationWhenInUseUsageDescription</key>
-<string>ExploraEC necesita tu ubicación para mostrarte lugares cercanos.</string>
-```
-
-Ninguno de los dos cambios se ve reflejado con hot reload/hot restart — requieren detener `flutter run` por completo y volver a ejecutarlo, porque cambian configuración nativa que la app lee solo al iniciar el proceso.
+Con la rama recién traída (antes de descomentar nada), Inicio y el Mapa muestran una lista vacía (`EmptyView` en Inicio, mapa sin marcadores de lugares) — es el comportamiento esperado hasta completar el Paso 3. `HomeScreen` y `MapScreen` no se modifican: ya leen el controller desde las Sesiones 4 y 5.
 
 ## Comando de arranque
 
@@ -47,5 +28,3 @@ Ninguno de los dos cambios se ve reflejado con hot reload/hot restart — requie
 flutter pub get
 flutter run
 ```
-
-Con la rama recién traída (antes de descomentar nada), la pestaña Mapa pide el permiso pero nunca lo solicita de verdad (`permiso` queda fijo en `denied`), así que siempre muestra el error de permiso denegado — es el comportamiento esperado hasta completar el Paso 3. Inicio sigue funcionando con los lugares de ejemplo.

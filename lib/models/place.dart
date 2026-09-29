@@ -1,8 +1,4 @@
 /// Modelo de datos de ExploraEC — Sesión 2.
-///
-/// Por ahora vive únicamente en memoria: [lugaresEjemplo] es una lista
-/// escrita a mano. La Sesión 6 la reemplaza por datos reales obtenidos
-/// de la Overpass API (OpenStreetMap).
 class Place {
   final String id;
   final String nombre;
@@ -19,8 +15,36 @@ class Place {
     required this.lat,
     required this.lng,
   });
+
+  /// Construye un [Place] a partir de un elemento `node` de la respuesta
+  /// JSON de la Overpass API — Sesión 6. Un nodo real casi nunca trae todos
+  /// los campos: `tags.name` en particular suele faltar (el lugar existe en
+  /// el mapa pero nadie cargó su nombre en OpenStreetMap), así que se arma
+  /// un nombre de reserva a partir de la categoría (`amenity`) antes que
+  /// mostrar un lugar sin nombre.
+  factory Place.fromOverpassElement(Map<String, dynamic> el) {
+    final tags = (el['tags'] as Map?)?.cast<String, dynamic>() ?? const {};
+    final categoria = (tags['amenity'] as String?) ?? 'lugar';
+    final nombre = (tags['name'] as String?) ?? _capitalizar(categoria);
+    return Place(
+      id: 'osm-${el['id']}',
+      nombre: nombre,
+      categoria: _capitalizar(categoria),
+      descripcion: (tags['description'] as String?) ??
+          'Lugar cercano de tipo "$categoria", datos abiertos de OpenStreetMap.',
+      lat: (el['lat'] as num).toDouble(),
+      lng: (el['lon'] as num).toDouble(),
+    );
+  }
 }
 
+String _capitalizar(String texto) =>
+    texto.isEmpty ? texto : '${texto[0].toUpperCase()}${texto.substring(1)}';
+
+/// Lugares agregados a mano desde `AddPlaceScreen` — en memoria únicamente,
+/// se pierden al reiniciar la app hasta que la Sesión 7 los persista con
+/// Hive. Desde la Sesión 6, `PlacesController.cargarLugares()` los combina con
+/// los lugares reales que trae la Overpass API (`PlacesApiService`).
 final List<Place> lugaresEjemplo = [
   Place(
     id: '1',
@@ -71,17 +95,3 @@ final List<Place> lugaresEjemplo = [
     lng: -78.5122,
   ),
 ];
-
-/// Simula una llamada de red (Sesión 3): misma firma que la Sesión 6 va a
-/// usar con la Overpass API real — solo cambia la implementación interna,
-/// la interfaz (`Future<List<Place>>`) no cambia.
-///
-/// [forzarError] y [forzarVacio] existen solo para la práctica de hoy, para
-/// poder demostrar los 3 estados sin depender de una red real.
-Future<List<Place>> fetchLugaresSimulado({bool forzarError = false, bool forzarVacio = false}) async {
-  await Future.delayed(const Duration(seconds: 1));
-  if (forzarError) {
-    throw Exception('No se pudo conectar con el servidor (simulado)');
-  }
-  return forzarVacio ? <Place>[] : lugaresEjemplo;
-}

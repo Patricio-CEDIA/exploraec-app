@@ -3,15 +3,15 @@ import 'package:get/get.dart';
 
 import '../models/place.dart';
 import '../services/location_service.dart';
+import '../services/places_api_service.dart';
 
 enum EstadoCarga { cargando, exito, error }
 
 /// Fuente única de verdad de los lugares y de la posición del usuario —
-/// Sesiones 4 y 5. La lista (`lugares`) y su estado de carga nacieron en la
-/// Sesión 4 para `HomeScreen`; desde la Sesión 5 el controller también
-/// guarda la posición real (`posicion`, con su propio estado) para que el
-/// Mapa —y, en la Sesión 6, la consulta a la Overpass API— la lean sin
-/// pedirla de nuevo al sistema operativo.
+/// Sesiones 4, 5 y 6. Desde la Sesión 6, `cargarLugares()` consulta la
+/// Overpass API con la posición real en vez de la carga simulada de la
+/// Sesión 3: la interfaz (`Obx`, `LoadingView`/`EmptyView`/`ErrorView`) no
+/// cambia una sola línea, solo cambia de dónde vienen los datos.
 class PlacesController extends GetxController {
   final RxList<Place> lugares = <Place>[].obs;
   final Rx<EstadoCarga> estado = EstadoCarga.cargando.obs;
@@ -40,17 +40,35 @@ class PlacesController extends GetxController {
 
   Future<void> cargarLugares() async {
     estado.value = EstadoCarga.cargando;
-    try {
-      final resultado = await fetchLugaresSimulado(
-        forzarError: _modoDebugError,
-        forzarVacio: _modoDebugVacio,
-      );
-      lugares.assignAll(resultado);
-      estado.value = EstadoCarga.exito;
-    } catch (e) {
-      mensajeError.value = '$e';
-      estado.value = EstadoCarga.error;
-    }
+
+    // TODO(sesion-06): borra las dos líneas de abajo y descomenta el bloque completo. (Paso 3 — datos reales)
+    // Por qué: las 2 líneas de abajo fuerzan éxito con una lista vacía,
+    // sin llamar a nada real. El bloque try/catch real toma la posición
+    // que el controller ya guarda desde la Sesión 5 (pidiéndola si aún no
+    // existe), consulta la Overpass API con `PlacesApiService` y traduce
+    // el resultado —o la excepción— a los mismos 3 estados de siempre, así
+    // que `HomeScreen` y `MapScreen` no cambian.
+    lugares.value = [];
+    estado.value = EstadoCarga.exito;
+    // try {
+    //   if (posicion.value == null) {
+    //     await cargarPosicion();
+    //   }
+    //   final pos = posicion.value;
+    //   if (pos == null) {
+    //     throw LocationException(mensajeErrorPosicion.value);
+    //   }
+    //   final reales = await PlacesApiService.buscarLugaresCercanos(
+    //     pos,
+    //     forzarError: _modoDebugError,
+    //     forzarVacio: _modoDebugVacio,
+    //   );
+    //   lugares.value = [...reales, ...lugaresEjemplo];
+    //   estado.value = EstadoCarga.exito;
+    // } catch (e) {
+    //   mensajeError.value = '$e';
+    //   estado.value = EstadoCarga.error;
+    // }
   }
 
   /// Pide la posición real al sistema operativo una sola vez y la deja en

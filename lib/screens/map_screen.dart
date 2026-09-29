@@ -64,36 +64,30 @@ class _MapScreenState extends State<MapScreen> {
           urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
           userAgentPackageName: 'com.tmo.exploraec',
         ),
-        // TODO(sesion-05): borra la línea de abajo y descomenta el bloque completo. (Paso 4 — marcadores)
-        // Por qué: sin marcadores el mapa se ve pero no comunica nada —
-        // el bloque real agrega uno para la posición del usuario y uno
-        // por cada Place que expone el controller, cada uno navegando al
-        // Detalle (con la distancia ya calculada) al tocarlo.
-        const MarkerLayer(markers: []),
-        // MarkerLayer(
-        //   markers: [
-        //     Marker(
-        //       point: miUbicacion,
-        //       width: 40,
-        //       height: 40,
-        //       child: const Icon(Icons.my_location, color: Colors.blue, size: 32),
-        //     ),
-        //     ...lugares.map(
-        //       (lugar) => Marker(
-        //         point: LatLng(lugar.lat, lugar.lng),
-        //         width: 40,
-        //         height: 40,
-        //         child: GestureDetector(
-        //           onTap: () => Get.to(() => DetailScreen(
-        //                 place: lugar,
-        //                 distanciaMetros: controller.distanciaA(lugar),
-        //               )),
-        //           child: Icon(Icons.place, color: AppTheme.colorPrimario, size: 36),
-        //         ),
-        //       ),
-        //     ),
-        //   ],
-        // ),
+        MarkerLayer(
+          markers: [
+            Marker(
+              point: miUbicacion,
+              width: 40,
+              height: 40,
+              child: const Icon(Icons.my_location, color: Colors.blue, size: 32),
+            ),
+            ...lugares.map(
+              (lugar) => Marker(
+                point: LatLng(lugar.lat, lugar.lng),
+                width: 40,
+                height: 40,
+                child: GestureDetector(
+                  onTap: () => Get.to(() => DetailScreen(
+                        place: lugar,
+                        distanciaMetros: controller.distanciaA(lugar),
+                      )),
+                  child: Icon(Icons.place, color: AppTheme.colorPrimario, size: 36),
+                ),
+              ),
+            ),
+          ],
+        ),
       ],
     );
   }
