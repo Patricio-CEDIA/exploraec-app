@@ -5,6 +5,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 
 import 'bindings/places_binding.dart';
 import 'firebase_options.dart';
+import 'screens/assistant_screen.dart';
 import 'screens/favorites_screen.dart';
 import 'screens/home_screen.dart';
 import 'screens/map_screen.dart';
@@ -64,15 +65,18 @@ class _RootShellState extends State<RootShell> {
       body: switch (_indiceActual) {
         0 => const HomeScreen(),
         1 => const MapScreen(),
-        _ => const FavoritesScreen(),
+        2 => const FavoritesScreen(),
+        _ => const AssistantScreen(),
       },
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _indiceActual,
+        type: BottomNavigationBarType.fixed,
         onTap: (i) => setState(() => _indiceActual = i),
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Inicio'),
           BottomNavigationBarItem(icon: Icon(Icons.map), label: 'Mapa'),
           BottomNavigationBarItem(icon: Icon(Icons.favorite), label: 'Favoritos'),
+          BottomNavigationBarItem(icon: Icon(Icons.smart_toy_outlined), label: 'Asistente'),
         ],
       ),
     );

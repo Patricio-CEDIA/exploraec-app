@@ -23,61 +23,49 @@ class AuthController extends GetxController {
     usuario.bindStream(FirebaseAuth.instance.authStateChanges());
   }
 
-  // TODO(sesion-08): borra la línea de abajo y descomenta el bloque completo. (Paso 3 — registro)
-  // Por qué: async => false de abajo nunca crea una cuenta real — el
-  // bloque real llama a createUserWithEmailAndPassword y traduce cada
-  // FirebaseAuthException a un mensaje legible, en vez de dejar pasar
-  // el error técnico crudo del SDK directo a la pantalla.
-  Future<bool> registrar({required String correo, required String clave}) async => false;
-  // Future<bool> registrar({required String correo, required String clave}) async {
-  //   cargando.value = true;
-  //   mensajeError.value = '';
-  //   try {
-  //     await FirebaseAuth.instance.createUserWithEmailAndPassword(
-  //       email: correo,
-  //       password: clave,
-  //     );
-  //     return true;
-  //   } on FirebaseAuthException catch (e) {
-  //     mensajeError.value = switch (e.code) {
-  //       'email-already-in-use' => 'Ya existe una cuenta con ese correo.',
-  //       'weak-password' => 'La contraseña debe tener al menos 6 caracteres.',
-  //       'invalid-email' => 'Ese correo no tiene un formato válido.',
-  //       _ => 'No se pudo crear la cuenta (${e.code}).',
-  //     };
-  //     return false;
-  //   } finally {
-  //     cargando.value = false;
-  //   }
-  // }
+  Future<bool> registrar({required String correo, required String clave}) async {
+    cargando.value = true;
+    mensajeError.value = '';
+    try {
+      await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: correo,
+        password: clave,
+      );
+      return true;
+    } on FirebaseAuthException catch (e) {
+      mensajeError.value = switch (e.code) {
+        'email-already-in-use' => 'Ya existe una cuenta con ese correo.',
+        'weak-password' => 'La contraseña debe tener al menos 6 caracteres.',
+        'invalid-email' => 'Ese correo no tiene un formato válido.',
+        _ => 'No se pudo crear la cuenta (${e.code}).',
+      };
+      return false;
+    } finally {
+      cargando.value = false;
+    }
+  }
 
-  // TODO(sesion-08): borra la línea de abajo y descomenta el bloque completo. (Paso 3 — inicio de sesión)
-  // Por qué: mismo patrón que registrar() — signInWithEmailAndPassword
-  // valida las credenciales contra Firebase, y cada código de error
-  // (user-not-found, wrong-password, etc.) se traduce a un mensaje
-  // que tiene sentido para quien está llenando el formulario.
-  Future<bool> iniciarSesion({required String correo, required String clave}) async => false;
-  // Future<bool> iniciarSesion({required String correo, required String clave}) async {
-  //   cargando.value = true;
-  //   mensajeError.value = '';
-  //   try {
-  //     await FirebaseAuth.instance.signInWithEmailAndPassword(
-  //       email: correo,
-  //       password: clave,
-  //     );
-  //     return true;
-  //   } on FirebaseAuthException catch (e) {
-  //     mensajeError.value = switch (e.code) {
-  //       'user-not-found' => 'No existe una cuenta con ese correo.',
-  //       'wrong-password' || 'invalid-credential' => 'Contraseña incorrecta.',
-  //       'invalid-email' => 'Ese correo no tiene un formato válido.',
-  //       _ => 'No se pudo iniciar sesión (${e.code}).',
-  //     };
-  //     return false;
-  //   } finally {
-  //     cargando.value = false;
-  //   }
-  // }
+  Future<bool> iniciarSesion({required String correo, required String clave}) async {
+    cargando.value = true;
+    mensajeError.value = '';
+    try {
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: correo,
+        password: clave,
+      );
+      return true;
+    } on FirebaseAuthException catch (e) {
+      mensajeError.value = switch (e.code) {
+        'user-not-found' => 'No existe una cuenta con ese correo.',
+        'wrong-password' || 'invalid-credential' => 'Contraseña incorrecta.',
+        'invalid-email' => 'Ese correo no tiene un formato válido.',
+        _ => 'No se pudo iniciar sesión (${e.code}).',
+      };
+      return false;
+    } finally {
+      cargando.value = false;
+    }
+  }
 
   Future<void> cerrarSesion() => FirebaseAuth.instance.signOut();
 }
