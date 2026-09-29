@@ -1,16 +1,16 @@
 import 'package:get/get.dart';
+import 'package:hive/hive.dart';
 
 import '../controllers/places_controller.dart';
+import '../repositories/place_repository.dart';
 
 /// Registra las dependencias que la app necesita desde el arranque —
-/// Sesión 4. Con un solo controller por ahora alcanza un binding simple;
-/// si una sesión futura agrega otro controller (por ejemplo, autenticación
-/// en la Sesión 8), puede sumarse aquí mismo o en un binding propio por
-/// pantalla, según convenga en ese momento — no se anticipa esa estructura
-/// hoy sin necesitarla todavía.
+/// Sesión 4 (`PlacesController`), Sesión 7 (`PlaceRepository`, que envuelve
+/// la caja de Hive ya abierta en `main.dart` antes de correr la app).
 class PlacesBinding extends Bindings {
   @override
   void dependencies() {
-    Get.put(PlacesController());
+    final repositorio = PlaceRepository(Hive.box<Map>('lugares_cache'));
+    Get.put(PlacesController(repositorio));
   }
 }

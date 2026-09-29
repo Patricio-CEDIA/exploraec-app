@@ -11,40 +11,24 @@ import '../widgets/error_view.dart';
 import '../widgets/loading_view.dart';
 import 'detail_screen.dart';
 
-/// Pantalla de Mapa real — Sesión 5. Reemplaza a `MapPlaceholderScreen`
-/// (Sesión 2). Teselas de OpenStreetMap, sin API key: ver la política de
-/// uso de tiles de OSM citada en la teoría de esta sesión. Lee del mismo
-/// `PlacesController` que `HomeScreen` (Sesión 4): los lugares salen de
-/// `controller.lugares` y la posición se guarda en `controller.posicion`,
-/// de modo que se pide al sistema operativo una sola vez.
-class MapScreen extends StatefulWidget {
+/// Pantalla de Mapa real — Sesión 5. Comparte el mismo `PlacesController`
+/// que `HomeScreen` (Sesión 4): la posición y los lugares se piden una sola
+/// vez (en el controller), no una vez por pantalla.
+class MapScreen extends GetView<PlacesController> {
   const MapScreen({super.key});
-
-  @override
-  State<MapScreen> createState() => _MapScreenState();
-}
-
-class _MapScreenState extends State<MapScreen> {
-  final controller = Get.find<PlacesController>();
-
-  @override
-  void initState() {
-    super.initState();
-    controller.cargarPosicion();
-  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Mapa')),
       body: Obx(() {
-        if (controller.estadoPosicion.value == EstadoCarga.cargando) {
+        if (controller.estado.value == EstadoCarga.cargando || controller.posicion.value == null) {
           return const LoadingView(mensaje: 'Obteniendo tu ubicación...');
         }
-        if (controller.estadoPosicion.value == EstadoCarga.error) {
+        if (controller.estado.value == EstadoCarga.error) {
           return ErrorView(
-            mensaje: controller.mensajeErrorPosicion.value,
-            onReintentar: () => controller.cargarPosicion(forzar: true),
+            mensaje: controller.mensajeError.value,
+            onReintentar: controller.cargarLugares,
           );
         }
         return _buildMapa(context, controller.posicion.value!, controller.lugares);

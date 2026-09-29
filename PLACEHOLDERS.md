@@ -1,26 +1,31 @@
-# Placeholders de esta rama (sesion-06)
+# Placeholders de esta rama (sesion-07)
 
-Punto de partida: ExploraEC con `PlacesController` (Sesión 4) y mapa real con posición del usuario (Sesión 5) ya resueltos; los lugares siguen siendo los de ejemplo escritos a mano. Tráela con:
+Punto de partida: ExploraEC con `PlacesController` (GetX) ya compartido entre Inicio y Mapa (Sesión 4), sin ninguna persistencia — cerrar la app pierde todo, y sin conexión no hay nada que mostrar salvo el error. Tráela con:
 
 ```bash
 git fetch starter
-git checkout starter/sesion-06 -- lib pubspec.yaml PLACEHOLDERS.md
+git checkout starter/sesion-07 -- lib pubspec.yaml PLACEHOLDERS.md
 ```
 
-El objetivo de esta sesión es reemplazar los lugares de ejemplo por lugares reales obtenidos de la Overpass API de OpenStreetMap (sin API key), usando la posición real del usuario, integrando la consulta en el `PlacesController`. Cada bloque comentado trae, justo debajo del `TODO`, un comentario `// Por qué:` con la explicación.
+El objetivo de esta sesión es agregar una caché local con Hive (`PlaceRepository`) y favoritos que sobreviven reiniciar la app. Cada bloque comentado trae, justo debajo del `TODO`, un comentario `// Por qué:` con la explicación.
 
 ## Archivos nuevos ya completos (sin `TODO`)
-- `lib/services/places_api_service.dart` — construcción de la consulta Overpass QL, llamada HTTP, manejo de errores (`SocketException`, timeout, `429`, JSON inválido) y mapeo de la respuesta a `Place`.
-- `lib/models/place.dart` — nuevo `Place.fromOverpassElement(...)`; ya no incluye `fetchLugaresSimulado` (reemplazada por el servicio real de esta sesión).
-- `pubspec.yaml` — ya incluye `http`.
+- `lib/repositories/place_repository.dart` — completo, no tiene marcadores. Se usa recién al completar el Paso 4 en `places_controller.dart` (ver tabla de abajo) — hasta entonces, el analizador puede marcar el campo `_repository` del controller como "no usado", es esperado.
+- `lib/screens/favorites_screen.dart` — completo, reemplaza a `favorites_placeholder_screen.dart` (se eliminó de esta rama).
+- `lib/main.dart` — ya inicializa Hive (`Hive.initFlutter()`, abre las cajas `lugares_cache` y `favoritos`) antes de `runApp`, y usa `FavoritesScreen` en vez del placeholder.
+- `lib/bindings/places_binding.dart` — ya arma el `PlaceRepository` con la caja `lugares_cache` y se lo pasa al `PlacesController`.
+- `lib/models/place.dart` — ya tiene `toMap()`/`fromMap()` para la (de)serialización manual con Hive.
+- `lib/widgets/place_card.dart` — ya muestra el ícono de favorito (`Obx` + `controller.esFavorito(place)`/`controller.alternarFavorito(place)`); no hace nada visible hasta completar el Paso 5.
+- `pubspec.yaml` — ya incluye `hive`, `hive_flutter`, `path_provider`.
 
 ## Qué descomentar
 
 | Archivo | Qué descomentar | Paso de la práctica |
 |---|---|---|
-| `lib/controllers/places_controller.dart` | En `cargarLugares()`: borrar `lugares.value = []; estado.value = EstadoCarga.exito;` y descomentar el bloque `try { ... } catch (e) { ... }` completo (posición del controller → Overpass → se agregan los lugares creados a mano en `AddPlaceScreen`) | Paso 3 |
+| `lib/controllers/places_controller.dart` | En `cargarLugares()`: borrar el bloque que llama a `PlacesApiService.buscarLugaresCercanos(...)` directamente y descomentar el bloque que llama a `_repository.obtenerLugaresCercanos(...)` (con caché) | Paso 4 |
+| `lib/controllers/places_controller.dart` | Borrar `void alternarFavorito(Place lugar) {}` y descomentar el cuerpo real de `alternarFavorito` (agrega/quita de `_favoritosBox` y de la lista reactiva `favoritos`) | Paso 5 |
 
-Con la rama recién traída (antes de descomentar nada), Inicio y el Mapa muestran una lista vacía (`EmptyView` en Inicio, mapa sin marcadores de lugares) — es el comportamiento esperado hasta completar el Paso 3. `HomeScreen` y `MapScreen` no se modifican: ya leen el controller desde las Sesiones 4 y 5.
+Con la rama recién traída (antes de descomentar nada), la app funciona igual que al final de la Sesión 4 (sin caché, sin favoritos funcionales — el corazón de `PlaceCard` se ve pero no persiste nada todavía). El orden importa: primero el Paso 4 (repositorio), después el Paso 5 (favoritos) — ambos son independientes entre sí, pero seguir ese orden es el que sigue el instructivo.
 
 ## Comando de arranque
 

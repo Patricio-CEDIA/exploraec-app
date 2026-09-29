@@ -15,8 +15,7 @@ import 'add_place_screen.dart';
 /// da acceso directo al controller ya registrado por `PlacesBinding`
 /// (equivalente a `Get.find<PlacesController>()`, pero sin repetirlo en
 /// cada método), y `Obx` reconstruye la pantalla sola cuando el controller
-/// cambia. Las próximas pantallas (Mapa en la Sesión 5, Favoritos en la
-/// Sesión 7) leen del mismo controller.
+/// cambia — el mismo controller que ahora también usa `MapScreen`.
 class HomeScreen extends GetView<PlacesController> {
   const HomeScreen({super.key});
 

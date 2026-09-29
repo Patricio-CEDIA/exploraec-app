@@ -36,6 +36,27 @@ class Place {
       lng: (el['lon'] as num).toDouble(),
     );
   }
+
+  /// Serialización manual para la caché local con Hive — Sesión 7. Todos
+  /// los campos son tipos primitivos (`String`/`double`), así que un
+  /// `Map<String, dynamic>` alcanza sin necesitar un `TypeAdapter` generado.
+  Map<String, dynamic> toMap() => {
+        'id': id,
+        'nombre': nombre,
+        'categoria': categoria,
+        'descripcion': descripcion,
+        'lat': lat,
+        'lng': lng,
+      };
+
+  factory Place.fromMap(Map<String, dynamic> mapa) => Place(
+        id: mapa['id'] as String,
+        nombre: mapa['nombre'] as String,
+        categoria: mapa['categoria'] as String,
+        descripcion: mapa['descripcion'] as String,
+        lat: (mapa['lat'] as num).toDouble(),
+        lng: (mapa['lng'] as num).toDouble(),
+      );
 }
 
 String _capitalizar(String texto) =>

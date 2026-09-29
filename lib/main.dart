@@ -1,21 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
 import 'bindings/places_binding.dart';
+import 'screens/favorites_screen.dart';
 import 'screens/home_screen.dart';
 import 'screens/map_screen.dart';
-import 'screens/favorites_placeholder_screen.dart';
 import 'theme/app_theme.dart';
 
-void main() {
+Future<void> main() async {
+  // Hive necesita el motor de Flutter listo antes de pedirle al sistema
+  // operativo la carpeta donde guardar sus archivos — por eso `main` ahora
+  // es `async` y arranca con `ensureInitialized()` antes que nada más.
+  WidgetsFlutterBinding.ensureInitialized();
+  await Hive.initFlutter();
+  await Hive.openBox<Map>('lugares_cache');
+  await Hive.openBox<Map>('favoritos');
   runApp(const ExploraEcApp());
 }
 
 /// `MaterialApp` → `GetMaterialApp` — Sesión 4. Sigue siendo Material por
 /// debajo (mismo `theme`, mismos widgets); `GetMaterialApp` agrega encima
 /// la navegación de GetX (`Get.to`, usada desde esta sesión en `PlaceCard`
-/// y `AddPlaceScreen`) y `initialBinding`, que registra `PlacesController`
-/// una sola vez, antes de que cualquier pantalla lo necesite.
+/// y `MapScreen`) y `initialBinding`, que registra `PlacesController` (con
+/// su `PlaceRepository`, Sesión 7) una sola vez, antes de que cualquier
+/// pantalla lo necesite.
 class ExploraEcApp extends StatelessWidget {
   const ExploraEcApp({super.key});
 
@@ -47,7 +56,7 @@ class _RootShellState extends State<RootShell> {
       body: switch (_indiceActual) {
         0 => const HomeScreen(),
         1 => const MapScreen(),
-        _ => const FavoritesPlaceholderScreen(),
+        _ => const FavoritesScreen(),
       },
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _indiceActual,
