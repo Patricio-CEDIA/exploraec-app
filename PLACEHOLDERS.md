@@ -1,36 +1,23 @@
-# Placeholders de esta rama (sesion-09)
+# Placeholders de esta rama (sesion-10)
 
-Punto de partida: ExploraEC con autenticación (Firebase Auth) y reseñas colaborativas (Firestore) de la Sesión 8. Tráela con:
+Esta rama **no tiene ningún `TODO(sesion-NN)` pendiente** — es la implementación de referencia completa de ExploraEC tal como queda construida al final del curso (Sesiones 1-9 resueltas). No es un punto de partida con espacios en blanco: es la base sobre la que la Sesión 10 audita, pule y documenta, sin agregar tecnología nueva.
 
-```bash
-git fetch starter
-git checkout starter/sesion-09 -- lib pubspec.yaml PLACEHOLDERS.md mock-server
-```
-
-El objetivo de esta sesión es agregar la pantalla "Asistente ExploraIA", que llama a un backend propio (nunca a un proveedor de LLM directamente) para recomendar un lugar entre los ya cargados. El bloque comentado trae, justo debajo del `TODO`, un comentario `// Por qué:` con la explicación.
-
-## Archivos nuevos ya completos (sin `TODO`)
-- `lib/services/ai_assistant_service.dart` — completo. Llama a `<LLM_BACKEND_URL>/recomendacion` (constante `kAiBackendUrl`, configurable con `--dart-define` sin tocar el código).
-- `mock-server/mock-server.js` — completo. Servidor local de prueba (sin dependencias, solo Node), NO es parte de la app Flutter — corre aparte, ver `mock-server/README.md`.
-- `mock-server/referencia-backend-cloud-function.md` — código de referencia de cómo se vería el backend real con una API key de verdad — **no se despliega en este curso**.
-
-## Qué descomentar
-
-| Archivo | Qué descomentar | Paso de la práctica |
-|---|---|---|
-| `lib/screens/assistant_screen.dart` | `_preguntar()`: borrar el bloque `await Future.delayed(...)` + su `setState` de aviso, y descomentar el bloque real que llama a `AiAssistantService.pedirRecomendacion(...)` | Paso 4 |
+Al crear esta rama desde `sesion-09` se encontraron y resolvieron, además del `TODO(sesion-09)` esperado en `assistant_screen.dart`, dos marcadores `TODO(sesion-04)` que habían quedado sin resolver arrastrándose sin efecto visible desde la Sesión 4 (`lib/screens/home_screen.dart` y `lib/screens/map_screen.dart` — ambos dejaban la pantalla mostrando literalmente el texto "Pendiente de conectar con Obx" en vez de la lista/mapa real). Se corrigieron aquí: si estás dictando el curso y ves ese texto en una rama anterior (`sesion-04` a `sesion-09`), es ese bug — la corrección es descomentar el bloque `Obx(...)` ya presente debajo de cada marcador en esa rama.
 
 ## Comando de arranque
 
 ```bash
-# Terminal 1 — el mock del backend de IA
-cd mock-server
-node mock-server.js
-
-# Terminal 2 — la app (Android emulator)
-cd ..
 flutter pub get
-flutter run --dart-define=LLM_BACKEND_URL=http://10.0.2.2:3000
+flutter run
 ```
 
-> Nota: el valor por defecto de `kAiBackendUrl` ya es `http://10.0.2.2:3000` (loopback del emulador Android), así que en ese caso `flutter run` sin `--dart-define` también funciona — el flag de arriba es necesario solo si usas un dispositivo físico o el simulador de iOS (ver tabla de URLs en `mock-server/README.md`).
+Para el Asistente ExploraIA (Sesión 9), sigue corriendo el mock server local:
+
+```bash
+cd mock-server && node mock-server.js
+```
+
+## Antes de usar esta rama en producción real
+
+- Genera tu propio `lib/firebase_options.dart` con `flutterfire configure` (ver `lib/firebase_options.example.dart`) — no está en el repo, está en `.gitignore` a propósito.
+- Reemplaza `<LLM_BACKEND_URL>` por un backend real desplegado (ver `mock-server/referencia-backend-cloud-function.md`) antes de publicar la app — el mock local es solo para la práctica de la Sesión 9.
