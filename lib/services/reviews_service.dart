@@ -13,7 +13,7 @@ class ReviewsService {
   /// conceptual) — emite una lista nueva cada vez que alguien, desde
   /// cualquier dispositivo, agrega o borra una reseña de este lugar. La UI
   /// no vuelve a pedir datos manualmente: los recibe.
-  static Stream<List<Review>> observarReseñas(String placeId) {
+  static Stream<List<Review>> observarResenas(String placeId) {
     return _coleccion
         .where('placeId', isEqualTo: placeId)
         .orderBy('timestamp', descending: true)
@@ -21,8 +21,8 @@ class ReviewsService {
         .map((snap) => snap.docs.map(Review.fromDoc).toList());
   }
 
-  static Future<void> agregar(Review reseña) {
-    return _coleccion.add(reseña.toMap());
+  static Future<void> agregar(Review resena) {
+    return _coleccion.add(resena.toMap());
   }
 
   /// Las reglas de seguridad (`firestore.rules`) ya exigen que solo el

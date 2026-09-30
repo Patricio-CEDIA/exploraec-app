@@ -21,6 +21,15 @@ class PlacesApiService {
   static const _endpoint = 'https://overpass-api.de/api/interpreter';
   static const _categorias = ['cafe', 'restaurant', 'park', 'pharmacy'];
   static const _radioMetros = 1500;
+  static const _intentos = 3;
+  static const _saturado = [502, 503, 504];
+
+  /// Overpass rechaza (HTTP 406) las peticiones anónimas: su política de uso
+  /// pide que cada cliente se identifique con un `User-Agent` propio.
+  static const _cabeceras = {
+    'User-Agent': 'ExploraEC/1.0 (app educativa del curso MOD3 de Flutter)',
+    'Accept': 'application/json',
+  };
 
   /// [forzarError]/[forzarVacio] existen solo para la práctica, para poder
   /// demostrar los 3 estados sin depender de que Overpass responda distinto
@@ -36,19 +45,28 @@ class PlacesApiService {
     if (forzarVacio) return <Place>[];
 
     final query = _construirQuery(posicion);
-    late final http.Response respuesta;
-    try {
-      respuesta = await http
-          .post(Uri.parse(_endpoint), body: {'data': query})
-          .timeout(const Duration(seconds: 15));
-    } on SocketException {
-      throw Exception('Sin conexión a internet. Verifica tu red e intenta de nuevo.');
-    } on TimeoutException {
-      throw Exception('Overpass tardó demasiado en responder. Puede estar saturada — intenta en un momento.');
+    late http.Response respuesta;
+    for (var intento = 1; intento <= _intentos; intento++) {
+      try {
+        respuesta = await http
+            .post(Uri.parse(_endpoint), headers: _cabeceras, body: {'data': query})
+            .timeout(const Duration(seconds: 15));
+      } on SocketException {
+        throw Exception('Sin conexión a internet. Verifica tu red e intenta de nuevo.');
+      } on TimeoutException {
+        throw Exception('Overpass tardó demasiado en responder. Puede estar saturada — intenta en un momento.');
+      }
+      // 502/503/504: el servidor público está saturado; suele resolverse solo
+      // al reintentar con una pequeña espera (1 s, luego 2 s).
+      if (!_saturado.contains(respuesta.statusCode)) break;
+      if (intento < _intentos) await Future.delayed(Duration(seconds: intento));
     }
 
     if (respuesta.statusCode == 429) {
       throw Exception('Demasiadas solicitudes a Overpass — espera unos segundos antes de reintentar.');
+    }
+    if (_saturado.contains(respuesta.statusCode)) {
+      throw Exception('Overpass está saturada en este momento. Toca Reintentar en unos segundos.');
     }
     if (respuesta.statusCode != 200) {
       throw Exception('Overpass respondió con un error (código ${respuesta.statusCode}).');
