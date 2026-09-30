@@ -26,13 +26,21 @@ class HomeScreen extends GetView<PlacesController> {
       appBar: AppBar(
         title: Obx(() => Text('ExploraEC (${controller.total})')),
         actions: [
+          IconButton(
+            icon: const Icon(Icons.translate),
+            tooltip: 'idioma'.tr,
+            onPressed: () {
+              final esEspanol = Get.locale?.languageCode == 'es';
+              Get.updateLocale(esEspanol ? const Locale('en', 'US') : const Locale('es', 'EC'));
+            },
+          ),
           PopupMenuButton<String>(
             tooltip: 'Simular estado (solo práctica)',
             onSelected: controller.simular,
-            itemBuilder: (context) => const [
-              PopupMenuItem(value: 'normal', child: Text('Simular: normal')),
-              PopupMenuItem(value: 'vacio', child: Text('Simular: vacío')),
-              PopupMenuItem(value: 'error', child: Text('Simular: error')),
+            itemBuilder: (context) => [
+              PopupMenuItem(value: 'normal', child: Text('sim_normal'.tr)),
+              PopupMenuItem(value: 'vacio', child: Text('sim_vacio'.tr)),
+              PopupMenuItem(value: 'error', child: Text('sim_error'.tr)),
             ],
           ),
         ],

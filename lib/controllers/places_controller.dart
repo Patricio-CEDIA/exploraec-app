@@ -114,6 +114,24 @@ class PlacesController extends GetxController {
     lugares.add(lugar);
   }
 
+  /// Favoritos en memoria — Paso 6 (opcional). Viven solo mientras la app
+  /// está abierta; la Sesión 7 los persiste con Hive, sin cambiar los
+  /// nombres de abajo (`favoritos`, `esFavorito`, `alternarFavorito`).
+  final RxList<Place> favoritos = <Place>[].obs;
+
+  bool esFavorito(Place lugar) => favoritos.any((p) => p.id == lugar.id);
+
+  /// Otro estado derivado: se calcula a partir de `favoritos`, no se guarda.
+  int get totalFavoritos => favoritos.length;
+
+  void alternarFavorito(Place lugar) {
+    if (esFavorito(lugar)) {
+      favoritos.removeWhere((p) => p.id == lugar.id);
+    } else {
+      favoritos.add(lugar);
+    }
+  }
+
   double? distanciaA(Place lugar) {
     final pos = posicion.value;
     return pos == null ? null : distanciaAPlaceEnMetros(pos, lugar);
