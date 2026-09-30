@@ -23,6 +23,8 @@ class PlacesController extends GetxController {
   final Rx<EstadoCarga> estado = EstadoCarga.cargando.obs;
   final RxString mensajeError = ''.obs;
   final Rx<Position?> posicion = Rx<Position?>(null);
+  final Rx<EstadoCarga> estadoPosicion = EstadoCarga.cargando.obs;
+  final RxString mensajeErrorPosicion = ''.obs;
 
   /// `true` solo cuando la última carga exitosa vino de la caché local de
   /// la Sesión 7 (la llamada remota falló) — la UI lo usa para mostrar un
@@ -75,10 +77,17 @@ class PlacesController extends GetxController {
   Future<void> cargarLugares() async {
     estado.value = EstadoCarga.cargando;
     try {
-      final pos = await LocationService.obtenerPosicionActual();
-      posicion.value = pos;
+      // Reutiliza la posición ya guardada (Sesión 5): pedirla al sistema en
+      // cada carga fallaría justo sin conexión, que es cuando la caché ayuda.
+      if (posicion.value == null) {
+        await cargarPosicion();
+      }
+      final pos = posicion.value;
+      if (pos == null) {
+        throw LocationException(mensajeErrorPosicion.value);
+      }
 
-      // TODO(sesion-07): borra el bloque de abajo y descomenta el bloque completo. (Paso 4 — repositorio con caché)
+      // TODO(sesion-07): borra el bloque de abajo y descomenta el bloque completo. (Paso 2 — repositorio con caché)
       // Por qué: el bloque de abajo llama a PlacesApiService directo,
       // igual que en la Sesión 6 — si no hay red, cargarLugares() falla
       // sin más. El bloque real pasa por _repository.obtenerLugaresCercanos,
@@ -106,6 +115,27 @@ class PlacesController extends GetxController {
     }
   }
 
+  /// Pide la posición real al sistema operativo una sola vez y la deja en
+  /// [posicion]; si ya la tiene, no vuelve a pedirla salvo que se pida con
+  /// [forzar] (por ejemplo, desde el botón "Reintentar" del Mapa).
+  Future<void> cargarPosicion({bool forzar = false}) async {
+    if (posicion.value != null && !forzar) {
+      estadoPosicion.value = EstadoCarga.exito;
+      return;
+    }
+    estadoPosicion.value = EstadoCarga.cargando;
+    try {
+      posicion.value = await LocationService.obtenerPosicionActual();
+      estadoPosicion.value = EstadoCarga.exito;
+    } on LocationException catch (e) {
+      mensajeErrorPosicion.value = e.mensaje;
+      estadoPosicion.value = EstadoCarga.error;
+    } catch (e) {
+      mensajeErrorPosicion.value = '$e';
+      estadoPosicion.value = EstadoCarga.error;
+    }
+  }
+
   /// Agrega un lugar creado a mano (`AddPlaceScreen`) — en memoria
   /// únicamente; no se guarda en la caché de la Sesión 7 a propósito, para
   /// mantener separadas dos cosas distintas: la caché es una copia de lo
@@ -117,7 +147,7 @@ class PlacesController extends GetxController {
 
   bool esFavorito(Place lugar) => favoritos.any((p) => p.id == lugar.id);
 
-  // TODO(sesion-07): borra la línea de abajo y descomenta el bloque completo. (Paso 5 — favoritos persistentes)
+  // TODO(sesion-07): borra la línea de abajo y descomenta el bloque completo. (Paso 3 — favoritos persistentes)
   // Por qué: el método vacío de abajo no guarda ni quita nada — la
   // versión real agrega o elimina el lugar de _favoritosBox (Hive, lo
   // que sobrevive reiniciar la app) y de la lista reactiva favoritos
