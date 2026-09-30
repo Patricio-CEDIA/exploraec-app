@@ -23,7 +23,7 @@ A diferencia de todas las sesiones anteriores, `flutter pub get && flutter run` 
 - `lib/screens/detail_screen.dart` — ya tiene la sección de reseñas completa (lectura en tiempo real vía `StreamBuilder`), salvo el botón "Publicar" (ver tabla abajo).
 - `lib/bindings/places_binding.dart` — ya registra `AuthController` junto a `PlacesController`.
 - `pubspec.yaml` — ya incluye `firebase_core`, `firebase_auth`, `cloud_firestore`.
-- `.gitignore` — ya excluye `lib/firebase_options.dart` además de `google-services.json`/`GoogleService-Info.plist`.
+- `.gitignore` — en este repo de referencia ya excluye `lib/firebase_options.dart` además de `google-services.json`/`GoogleService-Info.plist`. **Tu proyecto `exploraec` no recibe ese archivo con el checkout** (solo `lib/`, `pubspec.yaml`, etc.): agrégalo a mano en el Paso 2 de la práctica.
 
 ## Qué descomentar
 
@@ -31,8 +31,8 @@ A diferencia de todas las sesiones anteriores, `flutter pub get && flutter run` 
 |---|---|---|
 | `lib/controllers/auth_controller.dart` | `registrar()`: borrar `async => false;` y descomentar el cuerpo real (`createUserWithEmailAndPassword` + manejo de `FirebaseAuthException`) | Paso 3 |
 | `lib/controllers/auth_controller.dart` | `iniciarSesion()`: borrar `async => false;` y descomentar el cuerpo real (`signInWithEmailAndPassword` + manejo de `FirebaseAuthException`) | Paso 3 |
-| `lib/controllers/places_controller.dart` | `alternarFavorito()`: borrar la línea `return;` (bien al inicio, dentro del cuerpo) y descomentar las 3 líneas que verifican `Get.find<AuthController>().estaAutenticado` antes de continuar | Paso 4 |
-| `lib/screens/detail_screen.dart` | `_enviarReseña()`: borrar `return;` y descomentar el bloque real que arma un `Review` y llama a `ReviewsService.agregar(...)` | Paso 5 |
+| `lib/controllers/places_controller.dart` | `alternarFavorito()`: descomentar las 4 líneas del bloque `if (!Get.find<AuthController>().estaAutenticado) { ... return; }` del inicio (no hay nada que borrar) | Paso 4 |
+| `lib/screens/detail_screen.dart` | `_enviarResena()`: borrar `return;` y descomentar el bloque real que arma un `Review` y llama a `ReviewsService.agregar(...)` | Paso 5 |
 
 Nota del analizador: `places_controller.dart` importa `auth_controller.dart` desde antes de descomentar el Paso 4 — hasta ese momento, el analizador puede marcar ese import como "no usado todavía" dentro del bloque comentado; es esperado, no un error.
 

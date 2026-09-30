@@ -70,8 +70,8 @@ class _ReviewsSectionState extends State<_ReviewsSection> {
   int _calificacion = 5;
   final AuthController _auth = Get.find<AuthController>();
 
-  Future<void> _enviarReseña() async {
-    // TODO(sesion-08): borra la línea de abajo y descomenta el bloque completo. (Paso 6 — publicar reseña)
+  Future<void> _enviarResena() async {
+    // TODO(sesion-08): borra la línea de abajo y descomenta el bloque completo. (Paso 5 — publicar reseña)
     // Por qué: el return de abajo hace que el botón "Publicar" no
     // haga nada — el bloque real arma un Review con los datos del
     // usuario autenticado y lo guarda con ReviewsService.agregar,
@@ -123,7 +123,7 @@ class _ReviewsSectionState extends State<_ReviewsSection> {
                     onChanged: (n) => setState(() => _calificacion = n ?? 5),
                   ),
                   const Spacer(),
-                  ElevatedButton(onPressed: _enviarReseña, child: const Text('Publicar')),
+                  ElevatedButton(onPressed: _enviarResena, child: const Text('Publicar')),
                 ],
               ),
             ],
@@ -131,17 +131,17 @@ class _ReviewsSectionState extends State<_ReviewsSection> {
         }),
         const SizedBox(height: 12),
         StreamBuilder<List<Review>>(
-          stream: ReviewsService.observarReseñas(widget.placeId),
+          stream: ReviewsService.observarResenas(widget.placeId),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const Center(child: CircularProgressIndicator());
             }
-            final reseñas = snapshot.data ?? [];
-            if (reseñas.isEmpty) {
+            final resenas = snapshot.data ?? [];
+            if (resenas.isEmpty) {
               return const Text('Todavía no hay reseñas de este lugar.');
             }
             return Column(
-              children: reseñas.map((r) {
+              children: resenas.map((r) {
                 final esPropia = r.userId == _auth.usuario.value?.uid;
                 return ListTile(
                   title: Text('${'★' * r.calificacion} — ${r.userEmail}'),
