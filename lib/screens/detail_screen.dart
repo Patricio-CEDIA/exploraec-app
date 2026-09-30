@@ -70,7 +70,7 @@ class _ReviewsSectionState extends State<_ReviewsSection> {
   int _calificacion = 5;
   final AuthController _auth = Get.find<AuthController>();
 
-  Future<void> _enviarReseña() async {
+  Future<void> _enviarResena() async {
     final usuario = _auth.usuario.value;
     if (usuario == null) return; // el botón ya está oculto sin sesión, pero se valida igual
     if (_textoCtrl.text.trim().isEmpty) return;
