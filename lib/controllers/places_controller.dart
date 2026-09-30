@@ -133,6 +133,9 @@ class PlacesController extends GetxController {
 
   bool esFavorito(Place lugar) => favoritos.any((p) => p.id == lugar.id);
 
+  /// Otro estado derivado: se calcula a partir de `favoritos`, no se guarda.
+  int get totalFavoritos => favoritos.length;
+
   void alternarFavorito(Place lugar) {
     if (!Get.find<AuthController>().estaAutenticado) {
       Get.snackbar('Inicia sesión', 'Necesitas una cuenta para guardar favoritos.');
