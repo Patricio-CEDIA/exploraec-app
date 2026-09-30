@@ -31,3 +31,14 @@ Ver `instructivo-practica-sesion-09.md` (Paso 3) para cómo cambiar este valor s
 ## Referencia (no se ejecuta en este curso)
 
 `referencia-backend-cloud-function.md` muestra cómo se vería el backend real desplegado, con una API key de verdad — léelo, no lo corras.
+
+## Si el puerto 3000 ya está ocupado
+
+Si aparece `EADDRINUSE`, arranca el servidor en otro puerto con la variable `PORT` y apunta la app a ese mismo puerto:
+
+```bash
+PORT=3001 node mock-server.js                                   # Mac/Linux
+flutter run --dart-define=LLM_BACKEND_URL=http://10.0.2.2:3001  # emulador Android
+```
+
+En Windows (PowerShell): `$env:PORT=3001; node mock-server.js`.

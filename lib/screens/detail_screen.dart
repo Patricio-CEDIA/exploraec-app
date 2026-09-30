@@ -70,7 +70,7 @@ class _ReviewsSectionState extends State<_ReviewsSection> {
   int _calificacion = 5;
   final AuthController _auth = Get.find<AuthController>();
 
-  Future<void> _enviarReseña() async {
+  Future<void> _enviarResena() async {
     final usuario = _auth.usuario.value;
     if (usuario == null) return; // el botón ya está oculto sin sesión, pero se valida igual
     if (_textoCtrl.text.trim().isEmpty) return;
@@ -116,7 +116,7 @@ class _ReviewsSectionState extends State<_ReviewsSection> {
                     onChanged: (n) => setState(() => _calificacion = n ?? 5),
                   ),
                   const Spacer(),
-                  ElevatedButton(onPressed: _enviarReseña, child: const Text('Publicar')),
+                  ElevatedButton(onPressed: _enviarResena, child: const Text('Publicar')),
                 ],
               ),
             ],
@@ -124,17 +124,17 @@ class _ReviewsSectionState extends State<_ReviewsSection> {
         }),
         const SizedBox(height: 12),
         StreamBuilder<List<Review>>(
-          stream: ReviewsService.observarReseñas(widget.placeId),
+          stream: ReviewsService.observarResenas(widget.placeId),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const Center(child: CircularProgressIndicator());
             }
-            final reseñas = snapshot.data ?? [];
-            if (reseñas.isEmpty) {
+            final resenas = snapshot.data ?? [];
+            if (resenas.isEmpty) {
               return const Text('Todavía no hay reseñas de este lugar.');
             }
             return Column(
-              children: reseñas.map((r) {
+              children: resenas.map((r) {
                 final esPropia = r.userId == _auth.usuario.value?.uid;
                 return ListTile(
                   title: Text('${'★' * r.calificacion} — ${r.userEmail}'),

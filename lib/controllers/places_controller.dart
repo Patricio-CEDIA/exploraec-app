@@ -23,6 +23,8 @@ class PlacesController extends GetxController {
   final Rx<EstadoCarga> estado = EstadoCarga.cargando.obs;
   final RxString mensajeError = ''.obs;
   final Rx<Position?> posicion = Rx<Position?>(null);
+  final Rx<EstadoCarga> estadoPosicion = EstadoCarga.cargando.obs;
+  final RxString mensajeErrorPosicion = ''.obs;
 
   /// `true` solo cuando la última carga exitosa vino de la caché local de
   /// la Sesión 7 (la llamada remota falló) — la UI lo usa para mostrar un
@@ -75,8 +77,15 @@ class PlacesController extends GetxController {
   Future<void> cargarLugares() async {
     estado.value = EstadoCarga.cargando;
     try {
-      final pos = await LocationService.obtenerPosicionActual();
-      posicion.value = pos;
+      // Reutiliza la posición ya guardada (Sesión 5): pedirla al sistema en
+      // cada carga fallaría justo sin conexión, que es cuando la caché ayuda.
+      if (posicion.value == null) {
+        await cargarPosicion();
+      }
+      final pos = posicion.value;
+      if (pos == null) {
+        throw LocationException(mensajeErrorPosicion.value);
+      }
 
       final (resultado, cache) = await _repository.obtenerLugaresCercanos(
         pos,
@@ -89,6 +98,27 @@ class PlacesController extends GetxController {
     } catch (e) {
       mensajeError.value = '$e';
       estado.value = EstadoCarga.error;
+    }
+  }
+
+  /// Pide la posición real al sistema operativo una sola vez y la deja en
+  /// [posicion]; si ya la tiene, no vuelve a pedirla salvo que se pida con
+  /// [forzar] (por ejemplo, desde el botón "Reintentar" del Mapa).
+  Future<void> cargarPosicion({bool forzar = false}) async {
+    if (posicion.value != null && !forzar) {
+      estadoPosicion.value = EstadoCarga.exito;
+      return;
+    }
+    estadoPosicion.value = EstadoCarga.cargando;
+    try {
+      posicion.value = await LocationService.obtenerPosicionActual();
+      estadoPosicion.value = EstadoCarga.exito;
+    } on LocationException catch (e) {
+      mensajeErrorPosicion.value = e.mensaje;
+      estadoPosicion.value = EstadoCarga.error;
+    } catch (e) {
+      mensajeErrorPosicion.value = '$e';
+      estadoPosicion.value = EstadoCarga.error;
     }
   }
 
