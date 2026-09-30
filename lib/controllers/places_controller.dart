@@ -133,6 +133,9 @@ class PlacesController extends GetxController {
 
   bool esFavorito(Place lugar) => favoritos.any((p) => p.id == lugar.id);
 
+  /// Otro estado derivado: se calcula a partir de `favoritos`, no se guarda.
+  int get totalFavoritos => favoritos.length;
+
   // TODO(sesion-08): descomenta las 4 líneas del bloque `if` (no hay nada que borrar). (Paso 4 — favoritos exigen sesión iniciada)
   // Por qué: hasta este paso, cualquiera puede marcar favoritos sin
   // haber iniciado sesión — el bloque comentado corta la operación
