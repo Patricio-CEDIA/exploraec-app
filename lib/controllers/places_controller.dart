@@ -147,12 +147,21 @@ class PlacesController extends GetxController {
 
   bool esFavorito(Place lugar) => favoritos.any((p) => p.id == lugar.id);
 
-  // TODO(sesion-07): borra la línea de abajo y descomenta el bloque completo. (Paso 3 — favoritos persistentes)
-  // Por qué: el método vacío de abajo no guarda ni quita nada — la
-  // versión real agrega o elimina el lugar de _favoritosBox (Hive, lo
-  // que sobrevive reiniciar la app) y de la lista reactiva favoritos
-  // (lo que Obx observa para actualizar el ícono al instante).
-  void alternarFavorito(Place lugar) {}
+  /// Otro estado derivado: se calcula a partir de `favoritos`, no se guarda.
+  int get totalFavoritos => favoritos.length;
+
+  // TODO(sesion-07): borra el método `alternarFavorito` de abajo (la versión en memoria de la Sesión 4) y descomenta el bloque completo. (Paso 3 — favoritos persistentes)
+  // Por qué: la versión de abajo solo agrega o quita de la lista reactiva
+  // `favoritos`: el corazón responde, pero todo se pierde al cerrar la app.
+  // La versión real además agrega o elimina el lugar de _favoritosBox (Hive,
+  // lo que sobrevive reiniciar la app).
+  void alternarFavorito(Place lugar) {
+    if (esFavorito(lugar)) {
+      favoritos.removeWhere((p) => p.id == lugar.id);
+    } else {
+      favoritos.add(lugar);
+    }
+  }
   // void alternarFavorito(Place lugar) {
   //   if (esFavorito(lugar)) {
   //     _favoritosBox.delete(lugar.id);
