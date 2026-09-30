@@ -18,7 +18,7 @@ class FavoritesPlaceholderScreen extends StatelessWidget {
       body: Center(
         child: Obx(
           () => Text(
-            'Tienes ${controller.totalFavoritos} favoritos.\nSe guardarán de verdad en la Sesión 7.',
+            'Favoritos marcados: ${controller.totalFavoritos}.\nSe guardarán de verdad en la Sesión 7.',
             textAlign: TextAlign.center,
             style: const TextStyle(fontSize: 16, color: Colors.grey),
           ),
