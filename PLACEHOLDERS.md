@@ -23,9 +23,9 @@ El objetivo de esta sesión es agregar una caché local con Hive (`PlaceReposito
 | Archivo | Qué descomentar | Paso de la práctica |
 |---|---|---|
 | `lib/controllers/places_controller.dart` | En `cargarLugares()`: borrar el bloque que llama a `PlacesApiService.buscarLugaresCercanos(...)` directamente y descomentar el bloque que llama a `_repository.obtenerLugaresCercanos(...)` (con caché) | Paso 2 |
-| `lib/controllers/places_controller.dart` | Borrar `void alternarFavorito(Place lugar) {}` y descomentar el cuerpo real de `alternarFavorito` (agrega/quita de `_favoritosBox` y de la lista reactiva `favoritos`) | Paso 3 |
+| `lib/controllers/places_controller.dart` | Borrar la versión en memoria de `alternarFavorito` (la del Paso 6 opcional de la Sesión 4) y descomentar el cuerpo real (agrega/quita de `_favoritosBox` y de la lista reactiva `favoritos`) | Paso 3 |
 
-Con la rama recién traída (antes de descomentar nada), la app funciona igual que al final de la Sesión 6 (sin caché, sin favoritos funcionales — el corazón de `PlaceCard` se ve pero no persiste nada todavía). El orden importa: primero el Paso 2 (repositorio), después el Paso 3 (favoritos) — ambos son independientes entre sí, pero seguir ese orden es el que sigue el instructivo.
+Con la rama recién traída (antes de descomentar nada), la app funciona igual que al final de la Sesión 6 (sin caché; los favoritos funcionan solo en memoria (versión de la Sesión 4): el corazón de `PlaceCard` responde, pero se pierden al cerrar la app). El orden importa: primero el Paso 2 (repositorio), después el Paso 3 (favoritos) — ambos son independientes entre sí, pero seguir ese orden es el que sigue el instructivo.
 
 ## Comando de arranque
 
