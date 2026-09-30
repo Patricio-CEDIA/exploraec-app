@@ -14,7 +14,7 @@
 
 const http = require('node:http');
 
-const PUERTO = 3000;
+const PUERTO = Number(process.env.PORT) || 3000;
 
 // Heurística simple por palabra clave — no es IA de verdad, es un mock.
 // Si la consulta menciona "café"/"tomar algo", prioriza una categoría de
@@ -81,5 +81,5 @@ const servidor = http.createServer((req, res) => {
 
 servidor.listen(PUERTO, () => {
   console.log(`Mock del backend de IA escuchando en http://localhost:${PUERTO}`);
-  console.log('Desde el emulador Android, la app debe apuntar a http://10.0.2.2:3000');
+  console.log(`Desde el emulador Android, la app debe apuntar a http://10.0.2.2:${PUERTO}`);
 });
