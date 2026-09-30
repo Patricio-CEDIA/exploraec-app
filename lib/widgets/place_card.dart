@@ -60,7 +60,7 @@ class PlaceCard extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(Icons.place, size: 32, color: AppTheme.colorPrimario),
+          Icon(Icons.place, size: 32, color: Theme.of(context).colorScheme.primary),
           const SizedBox(width: AppSpacing.md),
           Expanded(
             child: Column(
@@ -75,7 +75,7 @@ class PlaceCard extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: AppSpacing.xs),
-                Text(place.categoria, style: estilos.bodySmall?.copyWith(color: Colors.grey.shade600)),
+                Text(place.categoria, style: estilos.bodySmall?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant)),
                 const SizedBox(height: AppSpacing.xs),
                 Text(
                   place.descripcion,
