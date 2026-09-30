@@ -20,11 +20,24 @@ class PlacesController extends GetxController {
   final Rx<EstadoCarga> estadoPosicion = EstadoCarga.cargando.obs;
   final RxString mensajeErrorPosicion = ''.obs;
 
+  /// Estado derivado (Sesión 4, Paso 5): se calcula a partir de `lugares`.
+  int get total => lugares.length;
+
+  /// Worker (Sesión 4, Paso 5): reacciona a cada cambio de `estado`.
+  void _observarErrores() {
+    ever(estado, (EstadoCarga e) {
+      if (e == EstadoCarga.error) {
+        Get.snackbar('Error', mensajeError.value);
+      }
+    });
+  }
+
   bool _modoDebugError = false;
   bool _modoDebugVacio = false;
 
   @override
   void onInit() {
+    _observarErrores();
     super.onInit();
     cargarLugares();
   }

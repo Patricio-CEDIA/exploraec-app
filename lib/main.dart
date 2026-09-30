@@ -24,6 +24,8 @@ class ExploraEcApp extends StatelessWidget {
     return GetMaterialApp(
       title: 'ExploraEC',
       theme: AppTheme.theme,
+      darkTheme: AppTheme.darkTheme,
+      themeMode: ThemeMode.system,
       initialBinding: PlacesBinding(),
       home: const RootShell(),
     );
