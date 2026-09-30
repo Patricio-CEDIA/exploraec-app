@@ -52,6 +52,40 @@ class AppTheme {
       ),
     );
   }
+
+  /// Tema oscuro (Paso 6, opcional). Misma semilla teal que `theme`, pero con
+  /// `Brightness.dark`: Flutter genera la paleta oscura completa y cada widget
+  /// que consulta `Theme.of(context)` la toma sin cambiar una sola línea.
+  /// A propósito NO fija colores de texto ni de fondo — los que fijaba `theme`
+  /// (navy sobre blanco) serían ilegibles sobre un fondo oscuro.
+  static ThemeData get darkTheme {
+    final colorScheme = ColorScheme.fromSeed(
+      seedColor: teal,
+      secondary: orange,
+      brightness: Brightness.dark,
+    );
+
+    return ThemeData(
+      useMaterial3: true,
+      colorScheme: colorScheme,
+      appBarTheme: const AppBarTheme(
+        backgroundColor: navy,
+        foregroundColor: Colors.white,
+        elevation: 0,
+      ),
+      cardTheme: CardThemeData(
+        elevation: 1,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      ),
+      elevatedButtonTheme: ElevatedButtonThemeData(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: colorScheme.primary,
+          foregroundColor: colorScheme.onPrimary,
+          minimumSize: const Size(48, 48), // tamaño mínimo de toque accesible
+        ),
+      ),
+    );
+  }
 }
 
 /// Constantes de espaciado — un único lugar para los valores de `EdgeInsets`
