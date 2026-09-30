@@ -23,7 +23,7 @@ class HomeScreen extends GetView<PlacesController> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('ExploraEC'),
+        title: Obx(() => Text('ExploraEC (${controller.total})')),
         actions: [
           PopupMenuButton<String>(
             tooltip: 'Simular estado (solo práctica)',
@@ -72,7 +72,7 @@ class HomeScreen extends GetView<PlacesController> {
           padding: const EdgeInsets.all(AppSpacing.sm),
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: columnas,
-            childAspectRatio: 2.4,
+            childAspectRatio: 2.2,
           ),
           itemCount: lugares.length,
           itemBuilder: (context, index) => PlaceCard(place: lugares[index]),
