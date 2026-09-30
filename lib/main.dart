@@ -6,6 +6,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'bindings/places_binding.dart';
 import 'firebase_options.dart';
 import 'screens/assistant_screen.dart';
+import 'i18n/app_translations.dart';
 import 'screens/favorites_screen.dart';
 import 'screens/home_screen.dart';
 import 'screens/map_screen.dart';
@@ -44,6 +45,9 @@ class ExploraEcApp extends StatelessWidget {
       theme: AppTheme.theme,
       darkTheme: AppTheme.darkTheme,
       themeMode: ThemeMode.system,
+      translations: AppTranslations(),
+      locale: const Locale('es', 'EC'),
+      fallbackLocale: const Locale('es', 'EC'),
       initialBinding: PlacesBinding(),
       home: const RootShell(),
     );
@@ -74,11 +78,11 @@ class _RootShellState extends State<RootShell> {
         currentIndex: _indiceActual,
         type: BottomNavigationBarType.fixed,
         onTap: (i) => setState(() => _indiceActual = i),
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Inicio'),
-          BottomNavigationBarItem(icon: Icon(Icons.map), label: 'Mapa'),
-          BottomNavigationBarItem(icon: Icon(Icons.favorite), label: 'Favoritos'),
-          BottomNavigationBarItem(icon: Icon(Icons.smart_toy_outlined), label: 'Asistente'),
+        items: [
+          BottomNavigationBarItem(icon: const Icon(Icons.home), label: 'inicio'.tr),
+          BottomNavigationBarItem(icon: const Icon(Icons.map), label: 'mapa'.tr),
+          BottomNavigationBarItem(icon: const Icon(Icons.favorite), label: 'favoritos'.tr),
+          BottomNavigationBarItem(icon: const Icon(Icons.smart_toy_outlined), label: 'asistente'.tr),
         ],
       ),
     );
