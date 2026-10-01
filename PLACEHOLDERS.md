@@ -23,6 +23,9 @@ El objetivo de esta sesión es agregar la pantalla "Asistente ExploraIA", que ll
 | Archivo | Qué descomentar | Paso de la práctica |
 |---|---|---|
 | `lib/screens/assistant_screen.dart` | `_preguntar()`: borrar el bloque `await Future.delayed(...)` + su `setState` de aviso, y descomentar el bloque real que llama a `AiAssistantService.pedirRecomendacion(...)` | Paso 4 |
+| `lib/screens/assistant_screen.dart` | *(Opcional)* Descomentar el `Wrap` de `ActionChip` bajo el campo de texto (preguntas sugeridas; no hay nada que borrar) | Paso 7 (opcional) |
+
+El Paso 7 es opcional: no cuenta dentro de los 55 minutos. Sin él la pantalla funciona igual (con el campo de texto).
 
 ## Comando de arranque
 

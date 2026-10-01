@@ -97,6 +97,33 @@ class _AssistantScreenState extends State<AssistantScreen> {
               onSubmitted: (_) => _preguntar(),
             ),
             const SizedBox(height: 12),
+            // TODO(sesion-09): OPCIONAL — descomenta el bloque de abajo (Paso 7 — preguntas sugeridas). No borres nada.
+            // Por qué: una caja de texto vacía obliga a inventar qué preguntar
+            // (el "problema de la página en blanco" de la UX de un asistente).
+            // Cada chip escribe una consulta de ejemplo en el campo y reutiliza
+            // el mismo `_preguntar()` de siempre: no hay un segundo camino hacia
+            // el backend. Se deshabilitan mientras hay una consulta en curso.
+            // Wrap(
+            //   spacing: 8,
+            //   children: [
+            //     'Tengo 20 minutos y quiero tomar algo cerca',
+            //     'Un lugar para comer',
+            //     'Qué puedo visitar hoy',
+            //   ]
+            //       .map(
+            //         (texto) => ActionChip(
+            //           label: Text(texto),
+            //           onPressed: _cargando
+            //               ? null
+            //               : () {
+            //                   _consultaCtrl.text = texto;
+            //                   _preguntar();
+            //                 },
+            //         ),
+            //       )
+            //       .toList(),
+            // ),
+            // const SizedBox(height: 12),
             ElevatedButton(
               onPressed: _cargando ? null : _preguntar,
               child: _cargando
