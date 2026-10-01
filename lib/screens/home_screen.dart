@@ -9,6 +9,7 @@ import '../widgets/error_view.dart';
 import '../widgets/loading_view.dart';
 import '../widgets/place_card.dart';
 import 'add_place_screen.dart';
+import '../services/settings_service.dart';
 
 /// Pantalla de Inicio: lista de lugares — Sesión 2. Desde la Sesión 4 ya
 /// no mantiene su propio `Future`/`setState`: `GetView<PlacesController>`
@@ -28,10 +29,10 @@ class HomeScreen extends GetView<PlacesController> {
           IconButton(
             icon: const Icon(Icons.translate),
             tooltip: 'idioma'.tr,
-            onPressed: () {
-              final esEspanol = Get.locale?.languageCode == 'es';
-              Get.updateLocale(esEspanol ? const Locale('en', 'US') : const Locale('es', 'EC'));
-            },
+            // Por qué: el bloque de abajo cambia el idioma pero no lo
+            // recuerda. `SettingsService.alternarIdioma` hace lo mismo y,
+            // además, guarda la elección en Hive para el próximo arranque.
+            onPressed: SettingsService.alternarIdioma,
           ),
           PopupMenuButton<String>(
             tooltip: 'Simular estado (solo práctica)',
@@ -57,7 +58,15 @@ class HomeScreen extends GetView<PlacesController> {
         if (controller.lugares.isEmpty) {
           return const EmptyView(mensaje: 'Todavía no hay lugares guardados');
         }
-        return _buildLista(controller.lugares);
+        // Por qué: `RefreshIndicator.onRefresh` exige una función que devuelva
+        // un `Future` — el indicador gira hasta que ese `Future` termina.
+        // `cargarLugares` ya es `async` (Sesión 6), así que se pasa tal cual:
+        // no hace falta escribir nada nuevo. Mientras recarga, el `Obx` de
+        // arriba muestra el `LoadingView` de siempre; eso es lo esperado.
+        return RefreshIndicator(
+          onRefresh: controller.cargarLugares,
+          child: _buildLista(controller.lugares),
+        );
       }),
       floatingActionButton: FloatingActionButton(
         onPressed: () => Get.to(() => const AddPlaceScreen()),
@@ -71,12 +80,14 @@ class HomeScreen extends GetView<PlacesController> {
       builder: (context, constraints) {
         if (constraints.maxWidth < 600) {
           return ListView.builder(
+            physics: const AlwaysScrollableScrollPhysics(),
             itemCount: lugares.length,
             itemBuilder: (context, index) => PlaceCard(place: lugares[index]),
           );
         }
         final columnas = constraints.maxWidth < 900 ? 2 : 3;
         return GridView.builder(
+          physics: const AlwaysScrollableScrollPhysics(),
           padding: const EdgeInsets.all(AppSpacing.sm),
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: columnas,

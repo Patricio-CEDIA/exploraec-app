@@ -9,6 +9,7 @@ import 'i18n/app_translations.dart';
 import 'screens/favorites_screen.dart';
 import 'screens/home_screen.dart';
 import 'screens/map_screen.dart';
+import 'services/settings_service.dart';
 import 'theme/app_theme.dart';
 
 Future<void> main() async {
@@ -19,6 +20,11 @@ Future<void> main() async {
   await Hive.initFlutter();
   await Hive.openBox<Map>('lugares_cache');
   await Hive.openBox<Map>('favoritos');
+  // Por qué: el idioma elegido se guarda en su propia caja de Hive
+  // (`ajustes`). Hive solo deja leer una caja que ya está abierta, y
+  // `GetMaterialApp` necesita el idioma al construirse, así que la caja
+  // se abre aquí, antes de `runApp`, igual que las dos de arriba.
+  await SettingsService.abrir();
   // `firebase_options.dart` NO viene en este repo (mira `.gitignore`): lo
   // genera `flutterfire configure` con los datos de TU propio proyecto de
   // Firebase — Paso 2 de la práctica de la Sesión 8. Sin ese paso, este
@@ -45,7 +51,9 @@ class ExploraEcApp extends StatelessWidget {
       darkTheme: AppTheme.darkTheme,
       themeMode: ThemeMode.system,
       translations: AppTranslations(),
-      locale: const Locale('es', 'EC'),
+      // Por qué: la línea fija siempre arranca en español. La real lee el
+      // idioma guardado en Hive (y usa español si nunca se eligió otro).
+      locale: SettingsService.idioma,
       fallbackLocale: const Locale('es', 'EC'),
       initialBinding: PlacesBinding(),
       home: const RootShell(),
