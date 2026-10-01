@@ -7,6 +7,8 @@ import 'i18n/app_translations.dart';
 import 'screens/favorites_screen.dart';
 import 'screens/home_screen.dart';
 import 'screens/map_screen.dart';
+// TODO(sesion-07): OPCIONAL — descomenta la línea de abajo (Paso 6 — idioma guardado). No borres nada.
+// import 'services/settings_service.dart';
 import 'theme/app_theme.dart';
 
 Future<void> main() async {
@@ -17,6 +19,12 @@ Future<void> main() async {
   await Hive.initFlutter();
   await Hive.openBox<Map>('lugares_cache');
   await Hive.openBox<Map>('favoritos');
+  // TODO(sesion-07): OPCIONAL — descomenta la línea de abajo (Paso 6 — idioma guardado). No borres nada.
+  // Por qué: el idioma elegido se guarda en su propia caja de Hive
+  // (`ajustes`). Hive solo deja leer una caja que ya está abierta, y
+  // `GetMaterialApp` necesita el idioma al construirse, así que la caja
+  // se abre aquí, antes de `runApp`, igual que las dos de arriba.
+  // await SettingsService.abrir();
   runApp(const ExploraEcApp());
 }
 
@@ -37,7 +45,11 @@ class ExploraEcApp extends StatelessWidget {
       darkTheme: AppTheme.darkTheme,
       themeMode: ThemeMode.system,
       translations: AppTranslations(),
+      // TODO(sesion-07): OPCIONAL — borra la línea `locale: const Locale('es', 'EC'),` de abajo y descomenta la siguiente. (Paso 6 — idioma guardado)
+      // Por qué: la línea fija siempre arranca en español. La real lee el
+      // idioma guardado en Hive (y usa español si nunca se eligió otro).
       locale: const Locale('es', 'EC'),
+      // locale: SettingsService.idioma,
       fallbackLocale: const Locale('es', 'EC'),
       initialBinding: PlacesBinding(),
       home: const RootShell(),

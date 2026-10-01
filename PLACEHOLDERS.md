@@ -18,6 +18,7 @@ El objetivo de esta sesión es agregar una caché local con Hive (`PlaceReposito
 - `lib/widgets/place_card.dart` — ya muestra el ícono de favorito (`Obx` + `controller.esFavorito(place)`/`controller.alternarFavorito(place)`); no hace nada visible hasta completar el Paso 3.
 - `pubspec.yaml` — ya incluye `hive`, `hive_flutter`, `path_provider`.
 - Botón «Centrar en mi ubicación» del Mapa y distancia en las tarjetas de Inicio — resultado del Paso 7 opcional de la Sesión 5, ya resuelto en esta rama.
+- `lib/services/settings_service.dart` — completo; solo se usa en el Paso 6 opcional (idioma guardado en Hive).
 - Deslizar para actualizar en Inicio (`RefreshIndicator`) — resultado del Paso 7 opcional de la Sesión 6, ya resuelto en esta rama.
 
 ## Qué descomentar
@@ -26,6 +27,10 @@ El objetivo de esta sesión es agregar una caché local con Hive (`PlaceReposito
 |---|---|---|
 | `lib/controllers/places_controller.dart` | En `cargarLugares()`: borrar el bloque que llama a `PlacesApiService.buscarLugaresCercanos(...)` directamente y descomentar el bloque que llama a `_repository.obtenerLugaresCercanos(...)` (con caché) | Paso 2 |
 | `lib/controllers/places_controller.dart` | Borrar la versión en memoria de `alternarFavorito` (la del Paso 6 opcional de la Sesión 4) y descomentar el cuerpo real (agrega/quita de `_favoritosBox` y de la lista reactiva `favoritos`) | Paso 3 |
+| `lib/main.dart` | *(Opcional)* Descomentar el `import` y `await SettingsService.abrir();` (no hay nada que borrar); y en `GetMaterialApp`, borrar `locale: const Locale('es', 'EC'),` y descomentar `locale: SettingsService.idioma,` | Paso 6 (opcional) |
+| `lib/screens/home_screen.dart` | *(Opcional)* Descomentar el `import`; y en el botón de idioma, borrar el bloque `onPressed: () { ... },` y descomentar `onPressed: SettingsService.alternarIdioma,` | Paso 6 (opcional) |
+
+El Paso 6 (idioma guardado con Hive) es opcional: no cuenta dentro de los 55 minutos. `lib/services/settings_service.dart` viene completo; sin descomentar nada la app corre igual que antes.
 
 Con la rama recién traída (antes de descomentar nada), la app funciona igual que al final de la Sesión 6 (sin caché; los favoritos funcionan solo en memoria (versión de la Sesión 4): el corazón de `PlaceCard` responde, pero se pierden al cerrar la app). El orden importa: primero el Paso 2 (repositorio), después el Paso 3 (favoritos) — ambos son independientes entre sí, pero seguir ese orden es el que sigue el instructivo.
 
