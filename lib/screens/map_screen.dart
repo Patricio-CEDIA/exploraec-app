@@ -26,6 +26,7 @@ class MapScreen extends StatefulWidget {
 
 class _MapScreenState extends State<MapScreen> {
   final controller = Get.find<PlacesController>();
+  final mapController = MapController();
 
   @override
   void initState() {
@@ -49,12 +50,26 @@ class _MapScreenState extends State<MapScreen> {
         }
         return _buildMapa(context, controller.posicion.value!, controller.lugares);
       }),
+      // Por qué: el `mapController` de arriba ya está conectado al
+      // `FlutterMap`; este botón lo usa como "control remoto" para volver
+      // a la posición del usuario con `move(...)` después de arrastrar el
+      // mapa, sin que la persona tenga que buscarse a mano.
+      floatingActionButton: FloatingActionButton(
+        tooltip: 'Centrar en mi ubicación',
+        onPressed: () {
+          final pos = controller.posicion.value;
+          if (pos == null) return;
+          mapController.move(LatLng(pos.latitude, pos.longitude), 15);
+        },
+        child: const Icon(Icons.my_location),
+      ),
     );
   }
 
   Widget _buildMapa(BuildContext context, Position posicion, List<Place> lugares) {
     final miUbicacion = LatLng(posicion.latitude, posicion.longitude);
     return FlutterMap(
+      mapController: mapController,
       options: MapOptions(initialCenter: miUbicacion, initialZoom: 15),
       children: [
         // La política de uso de tiles de OSM exige un userAgentPackageName
