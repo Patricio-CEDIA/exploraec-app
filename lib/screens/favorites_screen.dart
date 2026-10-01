@@ -21,7 +21,30 @@ class FavoritesScreen extends GetView<PlacesController> {
   Widget build(BuildContext context) {
     final auth = Get.find<AuthController>();
     return Scaffold(
-      appBar: AppBar(title: const Text('Favoritos')),
+      appBar: AppBar(
+        title: const Text('Favoritos'),
+        // TODO(sesion-08): OPCIONAL — descomenta el bloque de abajo (Paso 7 — cerrar sesión). No borres nada.
+        // Por qué: `AuthController.cerrarSesion()` ya existe desde el Paso 3,
+        // pero ninguna pantalla lo llama. Este botón lo conecta: al cerrar
+        // sesión, `authStateChanges()` emite un usuario nulo, `usuario` cambia
+        // y el `Obx` de abajo vuelve solo al aviso "Inicia sesión" — sin
+        // código extra. El propio botón desaparece porque también está
+        // dentro de un `Obx`.
+        // actions: [
+        //   Obx(
+        //     () => auth.estaAutenticado
+        //         ? IconButton(
+        //             icon: const Icon(Icons.logout),
+        //             tooltip: 'Cerrar sesión',
+        //             onPressed: () async {
+        //               await auth.cerrarSesion();
+        //               Get.snackbar('Sesión cerrada', 'Vuelve a iniciar sesión para guardar favoritos.');
+        //             },
+        //           )
+        //         : const SizedBox.shrink(),
+        //   ),
+        // ],
+      ),
       body: Obx(() {
         if (!auth.estaAutenticado) {
           return Center(

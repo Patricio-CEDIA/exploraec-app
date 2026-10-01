@@ -37,6 +37,9 @@ A diferencia de todas las sesiones anteriores, `flutter pub get && flutter run` 
 | `lib/controllers/auth_controller.dart` | `iniciarSesion()`: borrar `async => false;` y descomentar el cuerpo real (`signInWithEmailAndPassword` + manejo de `FirebaseAuthException`) | Paso 3 |
 | `lib/controllers/places_controller.dart` | `alternarFavorito()`: descomentar las 4 líneas del bloque `if (!Get.find<AuthController>().estaAutenticado) { ... return; }` del inicio (no hay nada que borrar) | Paso 4 |
 | `lib/screens/detail_screen.dart` | `_enviarResena()`: borrar `return;` y descomentar el bloque real que arma un `Review` y llama a `ReviewsService.agregar(...)` | Paso 5 |
+| `lib/screens/favorites_screen.dart` | *(Opcional)* Descomentar el bloque `actions: [ ... ]` de la `AppBar` (botón «Cerrar sesión»; no hay nada que borrar) | Paso 7 (opcional) |
+
+El Paso 7 es opcional: no cuenta dentro de los 55 minutos. `AuthController.cerrarSesion()` ya viene escrito; sin descomentar nada la app corre igual.
 
 Nota del analizador: `places_controller.dart` importa `auth_controller.dart` desde antes de descomentar el Paso 4 — hasta ese momento, el analizador puede marcar ese import como "no usado todavía" dentro del bloque comentado; es esperado, no un error.
 
