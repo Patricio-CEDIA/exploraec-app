@@ -14,6 +14,10 @@ El objetivo de esta sesión es agregar la pantalla "Asistente ExploraIA", que ll
 - `mock-server/mock-server.js` — completo. Servidor local de prueba (sin dependencias, solo Node), NO es parte de la app Flutter — corre aparte, ver `mock-server/README.md`.
 - `mock-server/referencia-backend-cloud-function.md` — código de referencia de cómo se vería el backend real con una API key de verdad — **no se despliega en este curso**.
 - Botón «Centrar en mi ubicación» del Mapa y distancia en las tarjetas de Inicio — resultado del Paso 7 opcional de la Sesión 5, ya resuelto en esta rama.
+- `lib/services/settings_service.dart` — completo; solo se usa en el Paso 6 opcional (idioma guardado en Hive).
+- Deslizar para actualizar en Inicio (`RefreshIndicator`) — resultado del Paso 7 opcional de la Sesión 6, ya resuelto en esta rama.
+- Idioma guardado con Hive (`SettingsService`) — resultado del Paso 6 opcional de la Sesión 7, ya resuelto en esta rama.
+- Botón «Cerrar sesión» en la pantalla de Favoritos — resultado del Paso 7 opcional de la Sesión 8, ya resuelto en esta rama.
 
 ## Qué descomentar
 
