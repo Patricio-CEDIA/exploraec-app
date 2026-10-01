@@ -17,6 +17,7 @@ El objetivo de esta sesión es agregar una caché local con Hive (`PlaceReposito
 - `lib/models/place.dart` — ya tiene `toMap()`/`fromMap()` para la (de)serialización manual con Hive.
 - `lib/widgets/place_card.dart` — ya muestra el ícono de favorito (`Obx` + `controller.esFavorito(place)`/`controller.alternarFavorito(place)`); no hace nada visible hasta completar el Paso 3.
 - `pubspec.yaml` — ya incluye `hive`, `hive_flutter`, `path_provider`.
+- Botón «Centrar en mi ubicación» del Mapa y distancia en las tarjetas de Inicio — resultado del Paso 7 opcional de la Sesión 5, ya resuelto en esta rama.
 
 ## Qué descomentar
 
