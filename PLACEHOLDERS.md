@@ -13,6 +13,7 @@ El objetivo de esta sesión es agregar la pantalla "Asistente ExploraIA", que ll
 - `lib/services/ai_assistant_service.dart` — completo. Llama a `<LLM_BACKEND_URL>/recomendacion` (constante `kAiBackendUrl`, configurable con `--dart-define` sin tocar el código).
 - `mock-server/mock-server.js` — completo. Servidor local de prueba (sin dependencias, solo Node), NO es parte de la app Flutter — corre aparte, ver `mock-server/README.md`.
 - `mock-server/referencia-backend-cloud-function.md` — código de referencia de cómo se vería el backend real con una API key de verdad — **no se despliega en este curso**.
+- Botón «Centrar en mi ubicación» del Mapa y distancia en las tarjetas de Inicio — resultado del Paso 7 opcional de la Sesión 5, ya resuelto en esta rama.
 
 ## Qué descomentar
 
