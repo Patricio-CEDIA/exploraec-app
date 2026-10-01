@@ -25,7 +25,6 @@ A diferencia de todas las sesiones anteriores, `flutter pub get && flutter run` 
 - `pubspec.yaml` — ya incluye `firebase_core`, `firebase_auth`, `cloud_firestore`.
 - `.gitignore` — en este repo de referencia ya excluye `lib/firebase_options.dart` además de `google-services.json`/`GoogleService-Info.plist`. **Tu proyecto `exploraec` no recibe ese archivo con el checkout** (solo `lib/`, `pubspec.yaml`, etc.): agrégalo a mano en el Paso 2 de la práctica.
 - Botón «Centrar en mi ubicación» del Mapa y distancia en las tarjetas de Inicio — resultado del Paso 7 opcional de la Sesión 5, ya resuelto en esta rama.
-- `lib/services/settings_service.dart` — completo; solo se usa en el Paso 6 opcional (idioma guardado en Hive).
 - Deslizar para actualizar en Inicio (`RefreshIndicator`) — resultado del Paso 7 opcional de la Sesión 6, ya resuelto en esta rama.
 - Idioma guardado con Hive (`SettingsService`) — resultado del Paso 6 opcional de la Sesión 7, ya resuelto en esta rama.
 
