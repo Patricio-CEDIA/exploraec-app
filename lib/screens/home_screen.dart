@@ -58,7 +58,17 @@ class HomeScreen extends GetView<PlacesController> {
         if (controller.lugares.isEmpty) {
           return const EmptyView(mensaje: 'Todavía no hay lugares guardados');
         }
+        // TODO(sesion-06): OPCIONAL — borra la línea de abajo y descomenta el bloque completo. (Paso 7 — deslizar para actualizar)
+        // Por qué: `RefreshIndicator.onRefresh` exige una función que devuelva
+        // un `Future` — el indicador gira hasta que ese `Future` termina.
+        // `cargarLugares` ya es `async` (Sesión 6), así que se pasa tal cual:
+        // no hace falta escribir nada nuevo. Mientras recarga, el `Obx` de
+        // arriba muestra el `LoadingView` de siempre; eso es lo esperado.
         return _buildLista(controller.lugares);
+        // return RefreshIndicator(
+        //   onRefresh: controller.cargarLugares,
+        //   child: _buildLista(controller.lugares),
+        // );
       }),
       floatingActionButton: FloatingActionButton(
         onPressed: () => Get.to(() => const AddPlaceScreen()),
@@ -72,12 +82,14 @@ class HomeScreen extends GetView<PlacesController> {
       builder: (context, constraints) {
         if (constraints.maxWidth < 600) {
           return ListView.builder(
+            physics: const AlwaysScrollableScrollPhysics(),
             itemCount: lugares.length,
             itemBuilder: (context, index) => PlaceCard(place: lugares[index]),
           );
         }
         final columnas = constraints.maxWidth < 900 ? 2 : 3;
         return GridView.builder(
+          physics: const AlwaysScrollableScrollPhysics(),
           padding: const EdgeInsets.all(AppSpacing.sm),
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: columnas,

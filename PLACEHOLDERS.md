@@ -20,8 +20,11 @@ El objetivo de esta sesión es reemplazar los lugares de ejemplo por lugares rea
 | Archivo | Qué descomentar | Paso de la práctica |
 |---|---|---|
 | `lib/controllers/places_controller.dart` | En `cargarLugares()`: borrar `lugares.value = []; estado.value = EstadoCarga.exito;` y descomentar el bloque `try { ... } catch (e) { ... }` completo (posición del controller → Overpass → se agregan los lugares creados a mano en `AddPlaceScreen`) | Paso 3 |
+| `lib/screens/home_screen.dart` | *(Opcional)* Borrar `return _buildLista(controller.lugares);` y descomentar el `RefreshIndicator` que lo envuelve (deslizar para actualizar) | Paso 7 (opcional) |
 
-Con la rama recién traída (antes de descomentar nada), Inicio y el Mapa muestran una lista vacía (`EmptyView` en Inicio, mapa sin marcadores de lugares) — es el comportamiento esperado hasta completar el Paso 3. `HomeScreen` y `MapScreen` no se modifican: ya leen el controller desde las Sesiones 4 y 5.
+El Paso 7 es opcional: no cuenta dentro de los 55 minutos. Sin él la app compila y corre igual.
+
+Con la rama recién traída (antes de descomentar nada), Inicio y el Mapa muestran una lista vacía (`EmptyView` en Inicio, mapa sin marcadores de lugares) — es el comportamiento esperado hasta completar el Paso 3. `HomeScreen` y `MapScreen` no se modifican en los pasos obligatorios: ya leen el controller desde las Sesiones 4 y 5.
 
 ## Comando de arranque
 
