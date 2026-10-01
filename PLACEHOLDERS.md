@@ -13,6 +13,7 @@ El objetivo de esta sesión es reemplazar los lugares de ejemplo por lugares rea
 - `lib/services/places_api_service.dart` — construcción de la consulta Overpass QL, llamada HTTP, manejo de errores (`SocketException`, timeout, `429`, JSON inválido) y mapeo de la respuesta a `Place`.
 - `lib/models/place.dart` — nuevo `Place.fromOverpassElement(...)`; ya no incluye `fetchLugaresSimulado` (reemplazada por el servicio real de esta sesión).
 - `pubspec.yaml` — ya incluye `http`.
+- Botón «Centrar en mi ubicación» del Mapa y distancia en las tarjetas de Inicio — resultado del Paso 7 opcional de la Sesión 5, ya resuelto en esta rama.
 
 ## Qué descomentar
 
