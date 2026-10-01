@@ -4,7 +4,13 @@ Esta rama **no tiene ningún `TODO(sesion-NN)` pendiente** — es la implementac
 
 Al crear esta rama desde `sesion-09` se encontraron y resolvieron, además del `TODO(sesion-09)` esperado en `assistant_screen.dart`, dos marcadores `TODO(sesion-04)` que habían quedado sin resolver arrastrándose sin efecto visible desde la Sesión 4 (`lib/screens/home_screen.dart` y `lib/screens/map_screen.dart` — ambos dejaban la pantalla mostrando literalmente el texto "Pendiente de conectar con Obx" en vez de la lista/mapa real). Se corrigieron aquí: si estás dictando el curso y ves ese texto en una rama anterior (`sesion-04` a `sesion-09`), es ese bug — la corrección es descomentar el bloque `Obx(...)` ya presente debajo de cada marcador en esa rama.
 
-Además, la rama trae ya resuelto el Paso 7 opcional de la Sesión 5 (botón «Centrar en mi ubicación» del Mapa y distancia en las tarjetas de Inicio).
+Además, la rama trae ya resueltos los pasos opcionales de las sesiones anteriores (cada uno era un bloque `TODO(sesion-NN): OPCIONAL`):
+
+- Sesión 5 (Paso 7): botón «Centrar en mi ubicación» del Mapa y distancia en las tarjetas de Inicio.
+- Sesión 6 (Paso 7): deslizar para actualizar en Inicio (`RefreshIndicator`).
+- Sesión 7 (Paso 6): idioma guardado con Hive (`lib/services/settings_service.dart`).
+- Sesión 8 (Paso 7): botón «Cerrar sesión» en Favoritos.
+- Sesión 9 (Paso 7): preguntas sugeridas (`ActionChip`) en el Asistente.
 
 ## Comando de arranque
 
