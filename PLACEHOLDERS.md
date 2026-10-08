@@ -1,41 +1,41 @@
-# Placeholders de esta rama (sesion-09)
+# Placeholders de esta rama (sesion-10)
 
-Punto de partida: ExploraEC con la Sesión 8 resuelta (inicio de sesión con token seguro, `ApiClient` con interceptores, CRUD de gastos, cierre de sesión limpio y cambio de contraseña). Tráela con:
+Punto de partida: ExploraEC con la Sesión 9 resuelta (Asistente ExploraIA con proxy, confirmación humana y preguntas sugeridas). Tráela con:
 
 ```bash
 git fetch starter
-git checkout starter/sesion-09 -- lib test pubspec.yaml PLACEHOLDERS.md mock-server
+git checkout starter/sesion-10 -- lib test pubspec.yaml PLACEHOLDERS.md docs .github
 flutter pub get
 ```
 
-El objetivo de esta sesión es el Asistente ExploraIA: una pestaña donde la persona pregunta por sus gastos, conectada a un **proxy** local (`mock-server/`, modo mock, sin ninguna clave de IA), enviando solo el resumen por categoría y pidiendo confirmación antes de registrar nada.
+El objetivo de esta sesión es el **cierre de calidad** de ExploraEC: capturar los errores que nadie esperaba, probar con pruebas de widgets, auditar secretos, generar el APK con GitHub Actions y preparar la entrega del Proyecto Final. No agrega funcionalidad nueva ni dependencias nuevas.
 
-**Todos los bloques son solo de descomentar**: nada que borrar ni copiar. Selecciona las líneas comentadas que están **debajo** de `TODO(sesion-09) Paso N` (no el `TODO` ni el «Por qué») y presiona `Ctrl + /` (`Cmd + /` en Mac).
+**Todos los bloques son solo de descomentar**: nada que borrar ni copiar. Selecciona las líneas comentadas que están **debajo** de `TODO(sesion-10) Paso N` (no el `TODO` ni el «Por qué») y presiona `Ctrl + /` (`Cmd + /` en Mac).
 
 ## Archivos ya completos (sin `TODO`)
-- `mock-server/mock-server.js` — el proxy (Node 18 o superior, sin dependencias): `POST /asistente`, reglas en modo mock, `PORT` configurable. No lee ni registra la cabecera `Authorization`; solo registra el tamaño y los nombres de los campos que recibe.
-- `mock-server/README.md` — contrato, URL según el entorno y qué reconoce el mock. `ejemplo-consulta.json` y `ejemplo-registro.json` sirven para probar el proxy con `curl`, sin la app.
-- `lib/services/ai_assistant_service.dart` — `kAiBackendUrl` (`--dart-define=LLM_BACKEND_URL=...`), `RespuestaIA`, `AccionPropuesta` (validada: una acción incompleta se descarta) y `AiAssistantService.preguntar(consulta, resumen)`, con errores traducidos a mensajes legibles. No lleva ninguna clave de IA.
-- `lib/models/resumen_gastos.dart` y `GastosApiService.obtenerResumen()` (`GET /gastos/resumen`) con `GastosController.obtenerResumen()`.
-- `lib/screens/assistant_screen.dart` — la pantalla completa; solo faltan los bloques de abajo. Incluye el diálogo de confirmación (`confirmarAccion`).
-- `lib/main.dart` — registra `AiAssistantService` y agrega la pestaña «Asistente». `SinSesionView` ahora acepta un título.
+- `lib/widgets/error_pantalla_view.dart` — la vista amistosa que reemplaza a la pantalla roja.
+- `lib/screens/pantalla_con_fallo.dart` — pantalla que falla a propósito (solo práctica).
+- `lib/screens/gastos_screen.dart` — el menú «⋮» suma, solo en modo depuración, «Provocar error de pantalla» y «Provocar error asíncrono».
+- `lib/main.dart` — llama a `ReporteErrores.instalar()` antes de `runApp`.
+- `.github/workflows/release-apk.yml` — compila, prueba y publica el APK al subir una etiqueta `v*`.
+- `docs/README-plantilla.md` y `docs/lista-de-verificacion.md` — plantilla de `README.md` y la rúbrica del Proyecto Final convertida en preguntas.
 
 ## Qué descomentar
 
 | Archivo | Bloque | Paso |
 |---|---|---|
-| `lib/screens/assistant_screen.dart` | Pedir el resumen, llamar al proxy y mostrar la respuesta (3 líneas) | 4 |
-| `lib/screens/assistant_screen.dart` | Pedir confirmación cuando la IA propone una acción (1 línea) | 5 |
-| `lib/screens/assistant_screen.dart` | Preguntas sugeridas (`Wrap` con chips) | 8 (opcional) |
+| `lib/utils/reporte_errores.dart` | `instalar()`: capturar errores no controlados | 2 |
+| `test/sesion_10_test.dart` | Tres pruebas de widgets | 3 |
+| `lib/screens/gastos_screen.dart` | Opción «Acerca de» y la línea que abre las licencias (2 bloques) | 8 (opcional) |
 
 ## Pruebas
 
-`test/sesion_09_test.dart` (7 pruebas) usa un backend y un proxy falsos: no necesita el backend, el proxy ni el emulador. Junto con las 15 de la Sesión 8 suman 22. Con la rama recién traída **pasan 19 y fallan 3**; al terminar cada paso:
+`test/sesion_10_test.dart` usa un servidor falso. Junto con las 22 de las Sesiones 8 y 9 suman 25 con la rama recién traída; al terminar cada paso:
 
 | Después del Paso | Pasan | Fallan |
 |---|---|---|
-| 1 (rama recién traída) | 19 | 3 |
-| 4 | 20 | 2 |
-| 5 | 22 | 0 |
+| 1 (rama recién traída) | 24 | 1 |
+| 2 | 25 | 0 |
+| 3 | 28 | 0 |
 
 Ejecutarlas: `flutter test`.

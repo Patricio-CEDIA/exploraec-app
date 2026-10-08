@@ -40,7 +40,7 @@ flutter pub get
 flutter run
 ```
 
-Sesiones con archivos adicionales fuera de `lib/`/`pubspec.yaml` (ver el `PLACEHOLDERS.md` de esa rama para el comando exacto): la Sesión 9 también trae la carpeta `mock-server/`.
+Sesiones con archivos adicionales fuera de `lib/`/`pubspec.yaml` (ver el `PLACEHOLDERS.md` de esa rama para el comando exacto): la Sesión 9 también trae la carpeta `mock-server/` y la Sesión 10 trae `docs/` y `.github/`.
 
 Algunos cambios (permisos nativos de la Sesión 5) no viven en este repo porque son específicos de tu propio proyecto o de tu propia cuenta — cada rama documenta en su `PLACEHOLDERS.md` cuáles son y cómo aplicarlos a mano.
 
@@ -56,7 +56,7 @@ Algunos cambios (permisos nativos de la Sesión 5) no viven en este repo porque 
 | `sesion-07` | Sesión 7 — Almacenamiento de datos | Favoritos persistentes con Hive, `PlaceRepository` |
 | `sesion-08` | Sesión 8 — Backend propio: autenticación JWT y CRUD de gastos | `dio` con interceptores, token en `flutter_secure_storage`, `AuthController`, CRUD de gastos y errores del backend |
 | `sesion-09` | Sesión 9 — IA y modelos LLM en Flutter | Pestaña «Asistente ExploraIA», `AiAssistantService`, proxy local `mock-server/` (sin claves de IA), confirmación humana antes de registrar un gasto |
-| `sesion-10` | Sesión 10 — Proyecto final | Punto de partida para pulido final — sin `TODO` pendientes, base para la entrega |
+| `sesion-10` | Sesión 10 — Cierre de calidad y entrega | Manejo de errores no controlados, pruebas de widgets, plantilla de README y lista de verificación, workflow de GitHub Actions que publica el APK |
 
 No existe una rama `sesion-01`: en esa sesión el proyecto se crea desde cero con `flutter create` (ver `sesiones/sesion-01/instructivo-practica-sesion-01.md` del curso) y todavía no se conecta a este repo — la Sesión 2 es la primera vez que se agrega como remoto.
 
