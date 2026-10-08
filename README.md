@@ -55,7 +55,7 @@ Algunos cambios (permisos nativos de la Sesión 5) no viven en este repo porque 
 | `sesion-06` | Sesión 6 — Programación asíncrona | Lugares reales desde la Overpass API, estados loading/success/error |
 | `sesion-07` | Sesión 7 — Almacenamiento de datos | Favoritos persistentes con Hive, `PlaceRepository` |
 | `sesion-08` | Sesión 8 — Backend propio: autenticación JWT y CRUD de gastos | `dio` con interceptores, token en `flutter_secure_storage`, `AuthController`, CRUD de gastos y errores del backend |
-| `sesion-09` | Sesión 9 — IA y modelos LLM en Flutter | Pantalla "Asistente ExploraIA", consumo del backend de IA |
+| `sesion-09` | Sesión 9 — IA y modelos LLM en Flutter | Pestaña «Asistente ExploraIA», `AiAssistantService`, proxy local `mock-server/` (sin claves de IA), confirmación humana antes de registrar un gasto |
 | `sesion-10` | Sesión 10 — Proyecto final | Punto de partida para pulido final — sin `TODO` pendientes, base para la entrega |
 
 No existe una rama `sesion-01`: en esa sesión el proyecto se crea desde cero con `flutter create` (ver `sesiones/sesion-01/instructivo-practica-sesion-01.md` del curso) y todavía no se conecta a este repo — la Sesión 2 es la primera vez que se agrega como remoto.
