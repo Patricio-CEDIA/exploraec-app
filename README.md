@@ -40,9 +40,9 @@ flutter pub get
 flutter run
 ```
 
-Sesiones con archivos adicionales fuera de `lib/`/`pubspec.yaml` (ver el `PLACEHOLDERS.md` de esa rama para el comando exacto): la Sesión 8 también trae `firestore.rules`, la Sesión 9 también trae la carpeta `mock-server/`.
+Sesiones con archivos adicionales fuera de `lib/`/`pubspec.yaml` (ver el `PLACEHOLDERS.md` de esa rama para el comando exacto): la Sesión 9 también trae la carpeta `mock-server/`.
 
-Algunos cambios (permisos nativos de la Sesión 5, configuración de Firebase de la Sesión 8) no viven en este repo porque son específicos de tu propio proyecto o de tu propia cuenta — cada rama documenta en su `PLACEHOLDERS.md` cuáles son y cómo aplicarlos a mano.
+Algunos cambios (permisos nativos de la Sesión 5) no viven en este repo porque son específicos de tu propio proyecto o de tu propia cuenta — cada rama documenta en su `PLACEHOLDERS.md` cuáles son y cómo aplicarlos a mano.
 
 ## Ramas disponibles
 
@@ -54,7 +54,7 @@ Algunos cambios (permisos nativos de la Sesión 5, configuración de Firebase de
 | `sesion-05` | Sesión 5 — Mapas y geolocalización | Permisos de ubicación, posición actual, pantalla de Mapa con `flutter_map` |
 | `sesion-06` | Sesión 6 — Programación asíncrona | Lugares reales desde la Overpass API, estados loading/success/error |
 | `sesion-07` | Sesión 7 — Almacenamiento de datos | Favoritos persistentes con Hive, `PlaceRepository` |
-| `sesion-08` | Sesión 8 — Integración con Firebase | Authentication, Firestore (reseñas), reglas de seguridad |
+| `sesion-08` | Sesión 8 — Backend propio: autenticación JWT y CRUD de gastos | `dio` con interceptores, token en `flutter_secure_storage`, `AuthController`, CRUD de gastos y errores del backend |
 | `sesion-09` | Sesión 9 — IA y modelos LLM en Flutter | Pantalla "Asistente ExploraIA", consumo del backend de IA |
 | `sesion-10` | Sesión 10 — Proyecto final | Punto de partida para pulido final — sin `TODO` pendientes, base para la entrega |
 
