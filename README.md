@@ -23,10 +23,10 @@ git fetch starter
 
 El flujo esperado en cada sesión (a partir de la Sesión 2):
 
-1. Traer la rama de tu sesión actual, solo los archivos que este repo gestiona: `git fetch starter && git checkout starter/sesion-NN -- lib pubspec.yaml PLACEHOLDERS.md`.
+1. Traer la rama de tu sesión actual, solo los archivos que este repo gestiona: `git fetch starter && git checkout starter/sesion-NN -- lib test pubspec.yaml PLACEHOLDERS.md` (más las carpetas extra que indique el `PLACEHOLDERS.md` de la rama: `mock-server`, `docs`, `.github`)`.
 2. Ejecutar `flutter pub get`.
 3. Ubicar los bloques `TODO(sesion-NN)` documentados en `PLACEHOLDERS.md` de esa rama (o buscarlos con tu editor), leer su comentario `// Por qué:`.
-4. Borrar el bloque provisional activo y descomentar el bloque real, siguiendo la práctica de clase o el instructivo correspondiente.
+4. Descomentar el bloque real siguiendo el instructivo (desde la Sesión 8 todos los bloques son solo de descomentar; en las sesiones 2 a 7 además hay que borrar el bloque provisional).
 5. Ejecutar y verificar.
 
 **Importante:** este repo no incluye el esqueleto completo que genera `flutter create` (carpetas `android/`, `ios/`, `web/`, etc.) — esas las genera el propio Flutter SDK, una sola vez, en la Sesión 1, y no vuelven a tocarse. Este repo es una **capa superpuesta** con los archivos específicos de ExploraEC (`lib/`, `pubspec.yaml`) — el flujo completo, de punta a punta:
@@ -35,7 +35,7 @@ El flujo esperado en cada sesión (a partir de la Sesión 2):
 flutter create exploraec        # Sesión 1, una sola vez
 cd exploraec
 # Sesión 2 en adelante: git remote add starter <GITHUB_REPOSITORY_URL> (una sola vez)
-#                       git fetch starter && git checkout starter/sesion-NN -- lib pubspec.yaml PLACEHOLDERS.md
+#                       git fetch starter && git checkout starter/sesion-NN -- lib test pubspec.yaml PLACEHOLDERS.md
 flutter pub get
 flutter run
 ```
@@ -52,8 +52,8 @@ Algunos cambios (permisos nativos de la Sesión 5) no viven en este repo porque 
 | `sesion-03` | Sesión 3 — Interfaces y UX | Tema Material, estados de carga/vacío/error reutilizables, layout responsivo |
 | `sesion-04` | Sesión 4 — Gestión de estado con GetX | `PlacesController`, `Obx`, navegación e inyección de dependencias con GetX |
 | `sesion-05` | Sesión 5 — Mapas y geolocalización | Permisos de ubicación, posición actual, pantalla de Mapa con `flutter_map` |
-| `sesion-06` | Sesión 6 — Programación asíncrona | Lugares reales desde la Overpass API, estados loading/success/error |
-| `sesion-07` | Sesión 7 — Almacenamiento de datos | Favoritos persistentes con Hive, `PlaceRepository` |
+| `sesion-06` | Sesión 6 — Programación asíncrona | «Gastos del viaje» contra el backend de gastos (`http`), estados loading/success/error |
+| `sesion-07` | Sesión 7 — Almacenamiento de datos | Caché de gastos con Hive (`GastosRepository`) y favoritos persistentes |
 | `sesion-08` | Sesión 8 — Backend propio: autenticación JWT y CRUD de gastos | `dio` con interceptores, token en `flutter_secure_storage`, `AuthController`, CRUD de gastos y errores del backend |
 | `sesion-09` | Sesión 9 — IA y modelos LLM en Flutter | Pestaña «Asistente ExploraIA», `AiAssistantService`, proxy local `mock-server/` (sin claves de IA), confirmación humana antes de registrar un gasto |
 | `sesion-10` | Sesión 10 — Cierre de calidad y entrega | Manejo de errores no controlados, pruebas de widgets, plantilla de README y lista de verificación, workflow de GitHub Actions que publica el APK |
@@ -62,6 +62,6 @@ No existe una rama `sesion-01`: en esa sesión el proyecto se crea desde cero co
 
 Cada rama se creó a partir de la anterior (`git checkout -b sesion-03 sesion-02`, etc.), así que `git log --oneline` refleja la progresión real de la práctica del curso.
 
-## Advertencia de verificación
+## Estado de verificación
 
-El código de este repo fue escrito y revisado cuidadosamente contra la documentación oficial de cada paquete, pero **no fue compilado ni ejecutado contra un SDK de Flutter real** (el entorno donde se generó este curso no tiene Flutter/Dart instalado). Antes de dictar cada sesión, ejecuta `flutter pub get`, `flutter analyze` y `flutter run` sobre la rama correspondiente y corrige cualquier detalle de API que haya cambiado de versión. Esto aplica también al comando `git checkout starter/sesion-NN -- lib pubspec.yaml PLACEHOLDERS.md` en sí: pruébalo una vez de punta a punta antes de la primera clase.
+Las ramas `sesion-08`, `sesion-09` y `sesion-10` se ejecutaron paso a paso en un emulador Android contra el backend de gastos, y cada una trae pruebas (`flutter test`) cuyo número de aciertos sube a medida que se descomentan sus bloques (la tabla está en el `PLACEHOLDERS.md` de cada rama). Aun así, antes de dictar cada sesión conviene ejecutar `flutter pub get`, `flutter test` y `flutter run` sobre la rama correspondiente, porque las versiones de los paquetes pueden cambiar. El workflow de `sesion-10` (`.github/workflows/release-apk.yml`) debe probarse una vez en un repositorio de prueba antes de la clase.
